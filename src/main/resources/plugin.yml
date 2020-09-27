@@ -1,0 +1,17 @@
+name: GuiAPI
+version: 2.0.0
+authors: [Parzival]
+main: io.github.parzivalExe.guiApi.GuiApiInitializer
+commands:
+  ItemEqualsTest:
+    description: Test for ItemEquality
+    usage: /itemEqualsTest
+  GuiTest:
+    description: GuiTest-Command
+    usage: /guiTest
+  guiAmount:
+    description: Get the amount of Guis saved by the GuiManager
+    usage: /guiAmount
+  componentAmount:
+    description: Get the amount of Components saved by the ComponentManager
+    usage: /componentAmount
