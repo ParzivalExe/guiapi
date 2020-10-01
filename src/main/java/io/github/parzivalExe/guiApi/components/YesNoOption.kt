@@ -24,6 +24,7 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
             field = value
             yesOption.finalizeComponent()
             yesOption = StaticComponent(value)
+            yesOption.clickAction = this
         }
     var yesOption = StaticComponent(yesMeta)
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
@@ -32,10 +33,12 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
             field = value
             noOption.finalizeComponent()
             noOption = StaticComponent(value)
+            noOption.clickAction = this
         }
     var noOption = StaticComponent(noMeta)
 
     var isOpened = false
+    private var newWindowOpening = false
     var openOption = OpenOption.UNDER_INVENTORY
 
 
@@ -49,8 +52,11 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
 
     override fun finalizeComponent() {
         super.finalizeComponent()
-        yesOption.finalizeComponent()
-        noOption.finalizeComponent()
+        if(!newWindowOpening) {
+            yesOption.finalizeComponent()
+            noOption.finalizeComponent()
+        }
+        isOpened = false
     }
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
@@ -117,12 +123,15 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
     }
 
     fun openYesNoOptionInNewGui(player: Player) {
+        newWindowOpening = true
         val yesNoGui = Gui(yesNoDialogTitle)
 
         yesNoGui.setComponent(yesOption, 3)
-        yesNoGui.setComponent(noOption, 4)
+        yesNoGui.setComponent(noOption, 5)
 
         yesNoGui.openGui(player)
+        newWindowOpening = false
+        isOpened = true
     }
 
 

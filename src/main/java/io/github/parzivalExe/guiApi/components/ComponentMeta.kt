@@ -1,13 +1,15 @@
 package io.github.parzivalExe.guiApi.components
 
+import io.github.parzivalExe.guiApi.xml.IXmlTag
+import io.github.parzivalExe.guiApi.xml.XMLAttribute
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-class ComponentMeta(var name: String, look: ItemStack) {
+class ComponentMeta(@XMLAttribute(necessary = true ) var name: String, @XMLAttribute(necessary = true) private var look: ItemStack) : IXmlTag {
 
+    @XMLAttribute
     var description = arrayListOf<String>()
     var savedObjects = hashMapOf<String, Any>()
-    private var look = look
 
 
     //region simple methods

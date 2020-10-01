@@ -26,6 +26,9 @@ class GuiTestCommand : CommandExecutor{
             gui2.setComponent(YesNoOption(ComponentMeta("NewInv", ItemStack(Material.SIGN))).apply {
                 openOption = YesNoOption.OpenOption.NEW_INVENTORY
             }, 3)
+            val yesNoSetting = YesNoSetting()
+            gui2.setComponent(yesNoSetting, 5)
+
 
             val gui = Gui("TestGui")
             val staticComponent = StaticComponent(ComponentMeta("TestStatic1", ItemStack(Material.GOLDEN_APPLE)))

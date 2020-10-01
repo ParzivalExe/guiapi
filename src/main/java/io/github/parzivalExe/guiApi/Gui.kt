@@ -5,20 +5,26 @@ import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.StaticComponent
 import io.github.parzivalExe.guiApi.exceptions.ComponentPositionOutOfBoundsException
 import io.github.parzivalExe.guiApi.exceptions.GuiCreateException
+import io.github.parzivalExe.guiApi.xml.XMLAttribute
+import io.github.parzivalExe.guiApi.xml.IXmlTag
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class Gui(val title: String) {
+@Suppress("MemberVisibilityCanBePrivate")
+class Gui(@field:XMLAttribute(necessary = true) val title: String) : IXmlTag{
 
     companion object {
         const val MAX_GUI_SIZE = 54
     }
 
+    @field:XMLAttribute
     var id: Int = GuiManager.initializeGui(this)
+    @field:XMLAttribute
     var forcedSize = -1
+    @field:XMLAttribute
     var fillEmptyPlaces = true
     var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
     var inventory: Inventory? = null
@@ -147,6 +153,10 @@ class Gui(val title: String) {
 
     override fun hashCode(): Int {
         return id
+    }
+
+    override fun toString(): String {
+        return "Gui:\n  id: $id\n  title: $title\n  forcedSize: $forcedSize\n  fillEmptySpaces: $fillEmptyPlaces\n  fillItem: $fillItem"
     }
 
 }

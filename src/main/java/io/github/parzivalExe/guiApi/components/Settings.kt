@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 
-class Settings(var options: Array<SettingOption>) : Component(options[0].meta) {
+open class Settings(var options: Array<SettingOption>) : Component(options[0].meta) {
 
     var activatedOption = 0
         set(value) {

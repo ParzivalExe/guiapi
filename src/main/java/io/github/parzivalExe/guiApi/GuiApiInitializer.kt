@@ -4,7 +4,13 @@ import io.github.parzivalExe.guiApi.commands.GetAmountCommand
 import io.github.parzivalExe.guiApi.commands.GuiTestCommand
 import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
+import io.github.parzivalExe.guiApi.xml.GuiXMLParser
 import org.bukkit.plugin.java.JavaPlugin
+import org.xml.sax.SAXException
+import java.io.File
+import java.io.IOException
+import javax.xml.parsers.ParserConfigurationException
+import javax.xml.parsers.SAXParserFactory
 
 class GuiApiInitializer : JavaPlugin() {
 
@@ -23,6 +29,20 @@ class GuiApiInitializer : JavaPlugin() {
         getCommand("guiTest").executor = GuiTestCommand()
         getCommand("guiAmount").executor = amountCommand
         getCommand("componentAmount").executor = amountCommand
+
+        val parserFactory = SAXParserFactory.newInstance()
+        try{
+            val parser = parserFactory.newSAXParser()
+            val handler = GuiXMLParser()
+            parser.parse(File("plugins/GuiAPI/Guis/TestGui.xml"), handler)
+
+        }catch (e: SAXException) {
+            e.printStackTrace()
+        }catch (e: ParserConfigurationException) {
+            e.printStackTrace()
+        }catch (e: IOException) {
+            e.printStackTrace()
+        }
 
         println("$PREFIX The GuiAPI has been initialized!")
     }
