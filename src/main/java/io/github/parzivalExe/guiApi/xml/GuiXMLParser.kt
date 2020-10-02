@@ -2,6 +2,7 @@ package io.github.parzivalExe.guiApi.xml
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.components.Component
+import io.github.parzivalExe.guiApi.components.ComponentMeta
 import org.xml.sax.Attributes
 import org.xml.sax.SAXException
 import org.xml.sax.helpers.DefaultHandler
@@ -79,6 +80,7 @@ class GuiXMLParser : DefaultHandler() {
     }
 
     private val stillOpenedTags = arrayListOf<XMLTag>()
+    private val constructorTags = hashMapOf<Class<out Component>, Any>()
 
     var gui: Gui? = null
 
@@ -88,7 +90,7 @@ class GuiXMLParser : DefaultHandler() {
         if(Class.forName(qName).interfaces.contains(IXmlTag::class.java)) {
             val xmlClass = Class.forName(qName).asSubclass(IXmlTag::class.java)
             val fields = hashMapOf<Field, Boolean>()
-            val xmlAttributes = hashMapOf<String, String>()
+            val xmlAttributes = hashMapOf<String, Any>()
             for(field in xmlClass.declaredFields) {
                 if(field.isAnnotationPresent(XMLAttribute::class.java)) {
                     fields[field] = field.getAnnotation(XMLAttribute::class.java).necessary
@@ -106,7 +108,7 @@ class GuiXMLParser : DefaultHandler() {
                 xmlAttributes[attributeName] = attributeValue
             }
             @Suppress("UNCHECKED_CAST")
-            val xmlTag = XMLTag(xmlClass, xmlAttributes, stillOpenedTags.clone() as ArrayList<XMLTag>)
+            val xmlTag = XMLTag(xmlClass, xmlAttributes, attributes, stillOpenedTags.clone() as ArrayList<XMLTag>)
             stillOpenedTags.add(xmlTag)
             println(xmlTag)
         }
@@ -121,15 +123,16 @@ class GuiXMLParser : DefaultHandler() {
         val xmlTag = stillOpenedTags[index]
         stillOpenedTags.removeAt(index)
 
+
         //Create Gui/Components
         if(xmlTag.tagClass.isAssignableFrom(Gui::class.java)) {
             /*GUI*/
-            if(!xmlTag.xmlAttributes.containsKey("title") || xmlTag.xmlAttributes["title"] !is String) {
+            if(!xmlTag.getXmlAttributes().containsKey("title")) {
                 throw SAXException("The title for the Gui ${xmlTag.tagClass.name} is not given or is no String")
             }
             val gui: Gui?
             try {
-                gui = xmlTag.tagClass.getConstructor(String::class.java).newInstance(xmlTag.xmlAttributes["title"]) as Gui?
+                gui = xmlTag.tagClass.getConstructor(String::class.java).newInstance(xmlTag.getXmlAttributes()["title"]) as Gui?
             }catch (e: NoSuchMethodException) {
                 throw SAXException("The class ${xmlTag.tagClass.name} extends from Gui but has no constructor \"init(String title)\"")
             }
@@ -140,12 +143,34 @@ class GuiXMLParser : DefaultHandler() {
             this.gui = gui
         }else if(xmlTag.tagClass.isAssignableFrom(Component::class.java)) {
             /*COMPONENTS*/
+            //TODO Get ComponentMeta for Component
+            val component: Component?
+            try {
 
+            }catch(e: NoSuchMethodException) {
+
+            }
+        }else if(xmlTag.tagClass == ComponentMeta::class.java && xmlTag.parentTags.any { parent -> Component::class.java.isAssignableFrom(parent.tagClass) }) {
+            if(!xmlTag.getXmlAttributes().containsKey("name") || !xmlTag.getXmlAttributes().containsKey("look")) {
+                throw SAXException("The name or look for ComponentMeta ${xmlTag.tagClass} is not given")
+            }
+            val componentMeta: ComponentMeta?
+            try {
+                componentMeta = xmlTag.tagClass.getConstructor(String::class.java, ItemStack::class.java)
+                        .newInstance(getValueFromString(xmlTag.getXmlAttributes()["name"] as String, String::class.java), getValueFromString(xmlTag.getXmlAttributes()["look"] as String, ItemStack::class.java)) as ComponentMeta?
+            }catch (e: NoSuchMethodException) {
+                throw SAXException("Constructor for ComponentMeta ${xmlTag.tagClass.name} not found. Constructor must look as followed: \"init(String name, ItemStack look)\"")
+            }
+            if(componentMeta == null) {
+                throw SAXException("ComponentMeta-Class couldn't be initialized")
+            }
+            //xmlTag.parentTags.firstOrNull { parent -> Component::class.java.isAssignableFrom(parent.tagClass) }!!.getXmlAttributes()["meta"] = componentMeta
+            println("ComponentMeta: $xmlTag")
         }
     }
 
     private fun setFields(xmlTag: XMLTag, obj: Any) {
-        for((attrName, attrValue) in xmlTag.xmlAttributes) {
+        for((attrName, attrValue) in xmlTag.getXmlAttributes()) {
             var field: Field?
             try {
                 field = obj::class.java.getDeclaredField(attrName)
@@ -156,23 +181,23 @@ class GuiXMLParser : DefaultHandler() {
             if(field == null) {
                 throw SAXException("Field $attrName couldn't be found inside ${obj::class.java.name}")
             }
-            val value = getValueFromString(attrValue, field.type)
-                    ?: throw SAXException("Type ${field.type} is not supported for xml-attributes")
-            field.set(gui, value)
+            var value = attrValue
+            if(attrValue is String) {
+                value = getValueFromString(attrValue, field.type)
+                        ?: throw SAXException("Type ${field.type} is not supported for xml-attributes")
+            }
+            field.set(obj, value)
         }
     }
 
     private fun getValueFromString(orgString: String, type: Class<*>): Any? {
         var string = orgString
-        if(type.isArray)
-        if(string.matches(Regex("\\[.+(, .+)*?]"))) {
-            //Array
-            string = string.substring(1, string.length-2)
-            val stringArray = string.split(", ")
-
-            for(arrayPart in stringArray) {
-
+        if(type.isArray) {
+            if(!string.matches(Regex("\\[.+(, .+)*?]"))) {
+                throw SAXException("This value must be an Array. Arrays are written as following: \"[xyz, xyz, ...]\"")
             }
+            println("ARRAY: $type")
+
         }
         if(!parsableTypes.containsKey(type)) {
             return null
