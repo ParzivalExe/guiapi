@@ -5,31 +5,54 @@ import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.StaticComponent
 import io.github.parzivalExe.guiApi.exceptions.ComponentPositionOutOfBoundsException
 import io.github.parzivalExe.guiApi.exceptions.GuiCreateException
-import io.github.parzivalExe.guiApi.xml.XMLAttribute
-import io.github.parzivalExe.guiApi.xml.IXmlTag
+import io.github.parzivalExe.objectXmlParser.*
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.io.File
+import javax.xml.parsers.SAXParserFactory
 
 @Suppress("MemberVisibilityCanBePrivate")
-class Gui(@field:XMLAttribute(necessary = true) val title: String) : IXmlTag{
+class Gui(@XMLAttribute(necessary = true) val title: String) : IXmlTag {
 
     companion object {
         const val MAX_GUI_SIZE = 54
+
+        @Suppress("unused")
+        @JvmStatic
+        fun initializeInstance(xmlTag: XMLTag): Any {
+            return Gui(xmlTag.getXmlAttributeByName("title")!!.getConvertedValue() as String)
+        }
+
+        @JvmStatic
+        fun createFromXML(file: File): Gui? {
+            val factory = SAXParserFactory.newInstance()
+            val parser = factory.newSAXParser()
+            val handler = ObjectXMLParser()
+            parser.parse(file, handler)
+            if(handler.objects.size == 1 && handler.objects[0] is Gui) {
+                return handler.objects[0] as Gui
+            }
+            return null
+        }
     }
 
-    @field:XMLAttribute
+    @XMLAttribute
     var id: Int = GuiManager.initializeGui(this)
-    @field:XMLAttribute
+    @XMLAttribute
     var forcedSize = -1
-    @field:XMLAttribute
+    @XMLAttribute
     var fillEmptyPlaces = true
+    @XMLAttribute
     var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
     var inventory: Inventory? = null
     var openedPlayer: Player? = null
 
+    @Suppress("unused")
+    @XMLAttribute(method = "setComponent(position)")
+    private val componentAttribute = arrayListOf<Component>()
     var components = hashMapOf<Component, Int>()
 
 

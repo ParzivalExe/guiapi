@@ -1,6 +1,9 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
+import io.github.parzivalExe.objectXmlParser.IXmlTag
+import io.github.parzivalExe.objectXmlParser.XMLAttribute
+import io.github.parzivalExe.objectXmlParser.XMLTag
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -8,18 +11,22 @@ import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
 @Suppress("MemberVisibilityCanBePrivate")
-abstract class Component(componentMeta: ComponentMeta) {
+abstract class Component(componentMeta: ComponentMeta) : IXmlTag {
 
+    @XMLAttribute(necessary = true)
     var meta = componentMeta
         set(value) {
             look = value.buildItem()
             field = value
         }
     var look = componentMeta.buildItem()
+    @XMLAttribute
     var id: Int = ComponentManager.getNewComponentId()
         private set
     var clickAction: ComponentClickAction? = null
     var place = -1
+
+
 
     init {
         @Suppress("LeakingThis")

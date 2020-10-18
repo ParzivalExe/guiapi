@@ -2,15 +2,13 @@ package io.github.parzivalExe.guiApi
 
 import io.github.parzivalExe.guiApi.commands.GetAmountCommand
 import io.github.parzivalExe.guiApi.commands.GuiTestCommand
+import io.github.parzivalExe.guiApi.commands.GuiXMLCommand
 import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
-import io.github.parzivalExe.guiApi.xml.GuiXMLParser
+import io.github.parzivalExe.objectXmlParser.ObjectXMLParser
+import io.github.parzivalExe.objectXmlParser.ValueParser
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import org.xml.sax.SAXException
-import java.io.File
-import java.io.IOException
-import javax.xml.parsers.ParserConfigurationException
-import javax.xml.parsers.SAXParserFactory
 
 class GuiApiInitializer : JavaPlugin() {
 
@@ -23,26 +21,41 @@ class GuiApiInitializer : JavaPlugin() {
     override fun onEnable() {
         println("$PREFIX The GuiAPI is being initialized...")
 
+
+        ObjectXMLParser.parsableTypes[ItemStack::class.java] = object: ValueParser {
+            override fun parse(orgString: String): Any {
+                var string = orgString
+                //[1x]type[:data][\[damage\]]
+                var type = 0
+                var amount = 1
+                var damage: Short = 0
+                var data: Byte = 0
+                if(string.contains(Regex("\\d+x"))) {
+                    amount = string.split("x")[0].toInt()
+                    string = string.split("x")[1]
+                }
+                if(string.contains(Regex("\\[\\d+]}"))) {
+                    damage = string.split("[")[1].removeSuffix("]").toShort()
+                    string = string.split("[")[0]
+                }
+                if(string.contains(Regex(":\\d+"))) {
+                    data = string.split(":")[1].toByte()
+                    string = string.split(":")[0]
+                }
+                type = string.toInt()
+
+                @Suppress("DEPRECATION")
+                return ItemStack(type, amount, damage, data)
+            }
+        }
+
         registerEvents()
         val amountCommand = GetAmountCommand()
         getCommand("itemEqualsTest").executor = ItemEqualsTestCommand()
         getCommand("guiTest").executor = GuiTestCommand()
         getCommand("guiAmount").executor = amountCommand
         getCommand("componentAmount").executor = amountCommand
-
-        val parserFactory = SAXParserFactory.newInstance()
-        try{
-            val parser = parserFactory.newSAXParser()
-            val handler = GuiXMLParser()
-            parser.parse(File("plugins/GuiAPI/Guis/TestGui.xml"), handler)
-
-        }catch (e: SAXException) {
-            e.printStackTrace()
-        }catch (e: ParserConfigurationException) {
-            e.printStackTrace()
-        }catch (e: IOException) {
-            e.printStackTrace()
-        }
+        getCommand("guixml").executor = GuiXMLCommand()
 
         println("$PREFIX The GuiAPI has been initialized!")
     }

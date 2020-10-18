@@ -15,3 +15,6 @@ commands:
   componentAmount:
     description: Get the amount of Components saved by the ComponentManager
     usage: /componentAmount
+  guixml:
+    description: create a Test-Gui from Test-XML
+    usage: /guixml

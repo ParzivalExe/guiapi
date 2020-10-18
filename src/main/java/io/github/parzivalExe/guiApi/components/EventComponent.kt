@@ -4,6 +4,8 @@ import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.components.Component
 import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.events.EventComponentClickedEvent
+import io.github.parzivalExe.objectXmlParser.IXmlTag
+import io.github.parzivalExe.objectXmlParser.XMLTag
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.ClickType
@@ -25,7 +27,15 @@ import org.bukkit.event.inventory.InventoryAction
  * @initialize yes
  * @basedOn {@link Component}
  */
-class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
+class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta), IXmlTag {
+
+    companion object {
+        @Suppress("unused")
+        @JvmStatic
+        fun initializeComponent(xmlTag: XMLTag): Any {
+            return EventComponent(xmlTag.getXmlAttributeByName("meta")!!.getConvertedValue() as ComponentMeta)
+        }
+    }
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         Bukkit.getPluginManager().callEvent(EventComponentClickedEvent(this, whoClicked, gui, action, slot, clickType))

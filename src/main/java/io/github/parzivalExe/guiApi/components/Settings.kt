@@ -2,13 +2,25 @@ package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.events.SettingsClickedEvent
+import io.github.parzivalExe.objectXmlParser.IXmlTag
+import io.github.parzivalExe.objectXmlParser.XMLAttribute
+import io.github.parzivalExe.objectXmlParser.XMLTag
 import org.bukkit.Bukkit
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 
-open class Settings(var options: Array<SettingOption>) : Component(options[0].meta) {
+open class Settings(@XMLAttribute(necessary = true ) var options: Array<SettingOption>) : Component(options[0].meta), IXmlTag {
+
+    companion object {
+        @Suppress("unused")
+        @JvmStatic
+        fun initializeInstance(xmlTag: XMLTag): Any {
+            println("tag options conv. Value: ${xmlTag.getXmlAttributeByName("options")}")
+            return Settings(xmlTag.getXmlAttributeByName("options")!!.getConvertedValue() as Array<SettingOption>)
+        }
+    }
 
     var activatedOption = 0
         set(value) {
@@ -16,9 +28,11 @@ open class Settings(var options: Array<SettingOption>) : Component(options[0].me
             meta = options[value].meta
         }
 
+
     fun getActivatedOption(): SettingOption {
         return options[activatedOption]
     }
+
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if(whoClicked is Player) {

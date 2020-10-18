@@ -1,8 +1,8 @@
 package io.github.parzivalExe.guiApi.components
 
-import io.github.parzivalExe.guiApi.xml.IXmlTag
-import io.github.parzivalExe.guiApi.xml.XMLAttribute
-import org.bukkit.Material
+import io.github.parzivalExe.objectXmlParser.IXmlTag
+import io.github.parzivalExe.objectXmlParser.XMLAttribute
+import io.github.parzivalExe.objectXmlParser.XMLTag
 import org.bukkit.inventory.ItemStack
 
 class ComponentMeta(@XMLAttribute(necessary = true ) var name: String, @XMLAttribute(necessary = true) private var look: ItemStack) : IXmlTag {
@@ -11,6 +11,13 @@ class ComponentMeta(@XMLAttribute(necessary = true ) var name: String, @XMLAttri
     var description = arrayListOf<String>()
     var savedObjects = hashMapOf<String, Any>()
 
+    companion object {
+        @Suppress("unused")
+        @JvmStatic
+        fun initializeInstance(xmlTag: XMLTag): Any {
+            return ComponentMeta(xmlTag.getXmlAttributeByName("name")!!.getConvertedValue() as String, xmlTag.getXmlAttributeByName("look")!!.getConvertedValue() as ItemStack)
+        }
+    }
 
     //region simple methods
 

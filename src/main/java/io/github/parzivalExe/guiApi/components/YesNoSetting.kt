@@ -1,6 +1,6 @@
 package io.github.parzivalExe.guiApi.components
 
-import io.github.parzivalExe.guiApi.xml.IXmlTag
+import io.github.parzivalExe.objectXmlParser.IXmlTag
 import org.bukkit.inventory.ItemStack
 
 @Suppress("MemberVisibilityCanBePrivate", "unused", "DEPRECATION")

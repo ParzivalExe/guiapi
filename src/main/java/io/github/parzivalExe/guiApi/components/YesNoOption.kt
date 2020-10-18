@@ -3,6 +3,9 @@ package io.github.parzivalExe.guiApi.components
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.events.NoOptionClickedEvent
 import io.github.parzivalExe.guiApi.events.YesOptionClickedEvent
+import io.github.parzivalExe.objectXmlParser.IXmlTag
+import io.github.parzivalExe.objectXmlParser.XMLAttribute
+import io.github.parzivalExe.objectXmlParser.XMLTag
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
@@ -15,6 +18,12 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
 
     companion object {
         const val YES_NO_OPTION_KEY = "yesNoComponent"
+
+        @Suppress("unused")
+        @JvmStatic
+        fun initializeInstance(xmlTag: XMLTag): Any {
+            return YesNoOption(xmlTag.getXmlAttributeByName("meta")!!.getConvertedValue() as ComponentMeta)
+        }
     }
 
     var yesNoDialogTitle = "Yes or No"
@@ -43,6 +52,7 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
 
 
 
+    @Suppress("unused")
     constructor(meta: ComponentMeta, yesNoDialogTitle: String, yesMeta: ComponentMeta, noMeta: ComponentMeta, openOption: OpenOption) : this(meta) {
         this.yesNoDialogTitle = yesNoDialogTitle
         this.yesMeta = yesMeta
@@ -114,7 +124,6 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
                 gui.forcedSize -= 9
             }
             gui.removeComponents(gui.getSlotCount()-9, gui.getSlotCount()-1)
-
 
             gui.openGui(player)
 
