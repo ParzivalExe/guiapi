@@ -2,7 +2,7 @@ package io.github.parzivalExe.guiApi.antlr.converter
 
 import org.bukkit.inventory.ItemStack
 
-class LookConverter : Converter{
+class ItemStackConverter : Converter{
     override fun attributeStringToValue(attrString: String, defaultValue: Any?): Any? {
         if(attrString.isNullOrEmpty())
             return defaultValue

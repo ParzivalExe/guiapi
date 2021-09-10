@@ -7,14 +7,13 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.antlr.converter.Converter
 import io.github.parzivalExe.guiApi.antlr.exceptions.XMLAttributeException
-import io.github.parzivalExe.guiApi.components.Component
 import java.lang.IllegalArgumentException
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
-open class DynamicElement(tagName: String) : NewElement(tagName) {
+open class DynamicElement(tagName: String) : Element(tagName) {
 
 
     //region GenerateClass
@@ -201,8 +200,8 @@ open class DynamicElement(tagName: String) : NewElement(tagName) {
     }
 
 
-    private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<NewElement> {
-        val elements = arrayListOf<NewElement>()
+    private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
+        val elements = arrayListOf<Element>()
         val synonym = library.getSynonymForClass(clazz)
         content?.elements?.forEach { element ->
             if(element.tagName == synonym || element.tagName == clazz.canonicalName) {

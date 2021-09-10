@@ -1,7 +1,7 @@
 package io.github.parzivalExe.guiApi.antlr.elements
 
 import io.github.parzivalExe.guiApi.Gui
-import io.github.parzivalExe.guiApi.antlr.converter.LookConverter
+import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.components.Component
 import org.bukkit.inventory.ItemStack
 
@@ -12,7 +12,7 @@ class GuiElement(tagName: String) : DynamicElement(tagName) {
     fun createGui(library: Library): Gui {
         val gui = Gui(getValueForAttribute("title"))
         gui.fillEmptyPlaces = getValueForAttributeOrDefault("fillEmptySpaces", "true").toBoolean()
-        gui.fillItem = LookConverter().attributeStringToValue(getValueForAttributeOrDefault("fillItem", "160:7"), gui.fillItem) as ItemStack
+        gui.fillItem = ItemStackConverter().attributeStringToValue(getValueForAttributeOrDefault("fillItem", "160:7"), gui.fillItem) as ItemStack
         gui.forcedSize = getValueForAttributeOrDefault("forcedSize", "-1").toInt()
 
         val components = arrayListOf<Component>()

@@ -1,7 +1,7 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
-import io.github.parzivalExe.guiApi.antlr.converter.LookConverter
+import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.converter.OpenOptionConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
@@ -27,7 +27,7 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
     @XMLAttribute(attrName = "dialogTitle", defaultValue = "Yes or No")
     var yesNoDialogTitle = "Yes or No"
 
-    @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = LookConverter::class)])
+    @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
     var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
 
     var yesOption = StaticComponent(yesMeta)
@@ -37,7 +37,7 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
             return StaticComponent(yesMeta)
         }
 
-    @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = LookConverter::class)])
+    @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = ItemStackConverter::class)])
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
 
     var noOption = StaticComponent(noMeta)

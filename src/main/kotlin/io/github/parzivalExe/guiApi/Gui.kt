@@ -1,6 +1,6 @@
 package io.github.parzivalExe.guiApi
 
-import io.github.parzivalExe.guiApi.antlr.converter.LookConverter
+import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.components.Component
@@ -13,8 +13,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.io.File
-import javax.xml.parsers.SAXParserFactory
 
 @Suppress("MemberVisibilityCanBePrivate")
 class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title: String) {
@@ -31,7 +29,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
     var forcedSize = -1
     @XMLAttribute(defaultValue = "true")
     var fillEmptyPlaces = true
-    @XMLAttribute(defaultValue = "160:7", converter = LookConverter::class)
+    @XMLAttribute(defaultValue = "160:7", converter = ItemStackConverter::class)
     var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
     var inventory: Inventory? = null
     var openedPlayer: Player? = null

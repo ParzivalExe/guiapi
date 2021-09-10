@@ -4,7 +4,6 @@ import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.elements.*
 import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
 import io.github.parzivalExe.guiApi.antlr.grammar.XMLParserBaseVisitor
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 class Visitor(val documentContext: XMLParser.DocumentContext) : XMLParserBaseVisitor<IXMLRule>() {
 
@@ -24,10 +23,10 @@ class Visitor(val documentContext: XMLParser.DocumentContext) : XMLParserBaseVis
             throw IllegalArgumentException("context can't be null")
 
         val content = Content()
-        val elements = arrayListOf<NewElement>()
+        val elements = arrayListOf<Element>()
 
         for(contextElement in context.element()) {
-            elements.add(visitElement(contextElement) as NewElement)
+            elements.add(visitElement(contextElement) as Element)
         }
         for(charData in context.chardata()) {
             val contextString = charData.text
@@ -43,7 +42,7 @@ class Visitor(val documentContext: XMLParser.DocumentContext) : XMLParserBaseVis
         if(contextElement == null)
             throw IllegalArgumentException("element can't be null")
 
-        val element = NewElement.getElementFromName(contextElement.name.text)
+        val element = Element.getElementFromName(contextElement.name.text)
 
         if(contextElement.content() != null)
             element.content = visitContent(contextElement.content()) as Content

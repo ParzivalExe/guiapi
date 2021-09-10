@@ -1,12 +1,9 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
-import io.github.parzivalExe.guiApi.antlr.converter.LookConverter
-import io.github.parzivalExe.guiApi.antlr.converter.StringArrayListConverter
-import io.github.parzivalExe.guiApi.antlr.converter.StringToStringArrayConverter
+import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
-import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -18,7 +15,7 @@ abstract class Component(componentMeta: ComponentMeta) {
 
     @XMLConstructor([
         XMLAttribute(necessary = true, attrName = "title", defaultValue = ""),
-        XMLAttribute(necessary = true, attrName = "look", defaultValue = "35", converter = LookConverter::class),
+        XMLAttribute(necessary = true, attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description", defaultValue = "[]"/*, converter = StringArrayListConverter::class*/)
     ])
     var meta = componentMeta

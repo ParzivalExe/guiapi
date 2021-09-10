@@ -1,6 +1,6 @@
 package io.github.parzivalExe.guiApi.antlr.elements
 
-class LibraryElement : NewElement("Library") {
+class LibraryElement : Element("Library") {
 
     fun CreateLibrary(): Library {
         val inclusions = arrayListOf<Include>()
