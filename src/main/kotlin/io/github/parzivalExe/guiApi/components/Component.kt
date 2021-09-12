@@ -16,7 +16,7 @@ abstract class Component(componentMeta: ComponentMeta) {
     @XMLConstructor([
         XMLAttribute(necessary = true, attrName = "title", defaultValue = ""),
         XMLAttribute(necessary = true, attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
-        XMLAttribute(attrName = "description", defaultValue = "[]"/*, converter = StringArrayListConverter::class*/)
+        XMLAttribute(attrName = "description", defaultValue = "[]")
     ])
     var meta = componentMeta
         set(value) {
@@ -26,7 +26,7 @@ abstract class Component(componentMeta: ComponentMeta) {
     var look = meta.buildItem()
         private set
 
-    //@XMLAttribute(defaultValue = "", converter = StringToStringArrayConverter::class)
+
     var description: ArrayList<String>
         set(value) {
             meta.description = value
@@ -83,6 +83,8 @@ abstract class Component(componentMeta: ComponentMeta) {
         }
         return false
     }
+
+    override fun hashCode(): Int = id
 
 
 }

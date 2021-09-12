@@ -1,7 +1,6 @@
 package io.github.parzivalExe.guiApi.commands
 
 import io.github.parzivalExe.guiApi.Gui
-import io.github.parzivalExe.guiApi.GuiManager
 import io.github.parzivalExe.guiApi.components.*
 import org.bukkit.Material
 import org.bukkit.command.Command
@@ -14,6 +13,7 @@ class GuiTestCommand : CommandExecutor{
 
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
 
+        @Suppress("DEPRECATION")
         if(sender is Player) {
 
             val gui2 = Gui("FolderContent")

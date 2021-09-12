@@ -13,19 +13,20 @@ import org.bukkit.inventory.ItemStack
 
 open class Settings(@XMLContent var options: Array<SettingOption>) : Component(options[0].meta) {
 
-    @Suppress("unused")
+    @Suppress("unused", "DEPRECATION")
     internal constructor() : this(arrayOf(
         SettingOption(ComponentMeta("beginner", ItemStack(Material.APPLE))),
         SettingOption(ComponentMeta("Advanced", ItemStack(Material.GOLDEN_APPLE))),
         SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.GOLDEN_APPLE, 1, 0, 1)))))
 
-    var activatedOption = 0
+    private var activatedOption = 0
         set(value) {
             field = value
             meta = options[value].meta
         }
 
 
+    @Suppress("unused")
     fun getActivatedOption(): SettingOption {
         return options[activatedOption]
     }

@@ -1,6 +1,7 @@
 package io.github.parzivalExe.guiApi.antlr.elements
 
-class Library(val inclusions: ArrayList<Include>) {
+@Suppress("unused")
+class Library(private val inclusions: ArrayList<Include>) {
 
     fun getClassForSynonym(synonym: String): Class<*>? =
         inclusions.firstOrNull { include -> include.synonym == synonym }?.clazz

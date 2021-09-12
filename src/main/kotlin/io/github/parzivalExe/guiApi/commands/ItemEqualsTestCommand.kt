@@ -13,7 +13,7 @@ class ItemEqualsTestCommand : CommandExecutor{
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if(sender is Player) {
 
-            var item = ItemStack(Material.APPLE)
+            val item = ItemStack(Material.APPLE)
             sender.inventory.setItem(0, item)
             sender.inventory.setItem(2, item)
 

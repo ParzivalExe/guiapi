@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack
 class SettingOption(@XMLConstructor([XMLAttribute(true, "title", ""), XMLAttribute(true, "look", "166", ItemStackConverter::class)])
                     var meta: ComponentMeta) {
 
-    constructor(): this(ComponentMeta("", ItemStack(Material.BARRIER))) {}
+    @Suppress("unused")
+    internal constructor(): this(ComponentMeta("", ItemStack(Material.BARRIER)))
 
 }

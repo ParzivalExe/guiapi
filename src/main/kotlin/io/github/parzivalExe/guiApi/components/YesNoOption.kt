@@ -15,18 +15,21 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
+@Suppress("MemberVisibilityCanBePrivate")
 class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
 
     companion object {
         const val YES_NO_OPTION_KEY = "yesNoComponent"
     }
 
-    constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    @Suppress("unused")
+    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
 
     @XMLAttribute(attrName = "dialogTitle", defaultValue = "Yes or No")
     var yesNoDialogTitle = "Yes or No"
 
+    @Suppress("DEPRECATION")
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
     var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
 

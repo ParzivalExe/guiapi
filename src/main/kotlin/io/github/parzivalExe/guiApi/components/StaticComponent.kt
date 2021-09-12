@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack
 
 class StaticComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
 
+    @Suppress("unused")
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {

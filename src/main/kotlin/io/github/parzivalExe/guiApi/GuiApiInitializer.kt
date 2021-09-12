@@ -1,17 +1,10 @@
 package io.github.parzivalExe.guiApi
 
-import io.github.parzivalExe.guiApi.antlr.Visitor
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLLexer
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
 import io.github.parzivalExe.guiApi.commands.GetAmountCommand
 import io.github.parzivalExe.guiApi.commands.GuiTestCommand
 import io.github.parzivalExe.guiApi.commands.GuiXMLCommand
 import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
-import org.antlr.v4.runtime.CharStreams
-import org.antlr.v4.runtime.CommonTokenStream
-import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 
 class GuiApiInitializer : JavaPlugin() {
@@ -25,29 +18,11 @@ class GuiApiInitializer : JavaPlugin() {
     override fun onEnable() {
         println("$PREFIX The GuiAPI is being initialized...")
 
+        registerConfig()
         registerEvents()
-        val amountCommand = GetAmountCommand()
-        getCommand("itemEqualsTest").executor = ItemEqualsTestCommand()
-        getCommand("guiTest").executor = GuiTestCommand()
-        getCommand("guiAmount").executor = amountCommand
-        getCommand("componentAmount").executor = amountCommand
-        getCommand("guixml").executor = GuiXMLCommand()
-
-        enableAntlr4()
+        registerCommands()
 
         println("$PREFIX The GuiAPI has been initialized!")
-    }
-
-
-    private fun enableAntlr4() {
-        val lexer = XMLLexer(CharStreams.fromFileName("GUIs/SimpleTestGui.xml"))
-        val token = CommonTokenStream(lexer)
-        val parser = XMLParser(token)
-
-        val documentContext = parser.document()
-
-        val visitor = Visitor(documentContext)
-        val gui = visitor.buildGui()
     }
 
 
@@ -59,13 +34,27 @@ class GuiApiInitializer : JavaPlugin() {
     }
 
 
-    fun registerEvents() {
+    private fun registerEvents() {
         println("$PREFIX   All Events are being registered...")
 
         server.pluginManager.registerEvents(GuiEvents(), this)
         server.pluginManager.registerEvents(ComponentEvents(), this)
 
         println("$PREFIX   Events have been registered!")
+    }
+
+    private fun registerCommands() {
+        val amountCommand = GetAmountCommand()
+        getCommand("itemEqualsTest").executor = ItemEqualsTestCommand()
+        getCommand("guiTest").executor = GuiTestCommand()
+        getCommand("guiAmount").executor = amountCommand
+        getCommand("componentAmount").executor = amountCommand
+        @Suppress("SpellCheckingInspection")
+        getCommand("guixml").executor = GuiXMLCommand()
+    }
+
+    private fun registerConfig() {
+        config.options().copyDefaults(true)
     }
 
 

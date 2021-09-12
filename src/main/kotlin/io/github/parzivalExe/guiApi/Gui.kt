@@ -1,6 +1,9 @@
 package io.github.parzivalExe.guiApi
 
+import io.github.parzivalExe.guiApi.antlr.Visitor
 import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
+import io.github.parzivalExe.guiApi.antlr.grammar.XMLLexer
+import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.components.Component
@@ -8,6 +11,8 @@ import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.StaticComponent
 import io.github.parzivalExe.guiApi.exceptions.ComponentPositionOutOfBoundsException
 import io.github.parzivalExe.guiApi.exceptions.GuiCreateException
+import org.antlr.v4.runtime.CharStreams
+import org.antlr.v4.runtime.CommonTokenStream
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -19,16 +24,28 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     companion object {
         const val MAX_GUI_SIZE = 54
+
+        @JvmStatic
+        fun createGuiFromFile(path: String): Gui {
+            val lexer = XMLLexer(CharStreams.fromFileName(path))
+            val token = CommonTokenStream(lexer)
+            val parser = XMLParser(token)
+
+            val documentContext = parser.document()
+
+            val visitor = Visitor(documentContext)
+           return visitor.buildGui()
+        }
     }
 
     constructor() : this("NoTitleSet")
 
-    //@XMLAttribute(defaultValue = )
     var id: Int = GuiManager.initializeGui(this)
     @XMLAttribute(defaultValue = "-1")
     var forcedSize = -1
     @XMLAttribute(defaultValue = "true")
     var fillEmptyPlaces = true
+    @Suppress("DEPRECATION")
     @XMLAttribute(defaultValue = "160:7", converter = ItemStackConverter::class)
     var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
     var inventory: Inventory? = null

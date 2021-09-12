@@ -11,11 +11,7 @@ import org.bukkit.inventory.ItemStack
 
 /**
  * <h2>general</h2>
- * This is a special component based on the class {@link Component}. If you will click this component it will fire the event {@see GuiEventComponentClickedEvent}.
- *
- * <h2>infos</h2>
- * You can initialize an event component simple with the Constructor of this class. PLEASE DIDN'T EXTENDS THIS CLASS TO ONE OF YOUR CLASSES because it is
- * already a special Component
+ * This is a special component based on the class {@link Component}. If you click this component it will fire the event {@see GuiEventComponentClickedEvent}.
  *
  * @author Parzival
  * @category Component
@@ -28,6 +24,7 @@ import org.bukkit.inventory.ItemStack
 class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
 
 
+    @Suppress("unused")
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {

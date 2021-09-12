@@ -3,6 +3,7 @@ package io.github.parzivalExe.guiApi.antlr.elements
 import io.github.parzivalExe.guiApi.antlr.IXMLRule
 import java.lang.Exception
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class Element(val tagName: String) : IXMLRule {
 
     var attributes = arrayListOf<Attribute>()

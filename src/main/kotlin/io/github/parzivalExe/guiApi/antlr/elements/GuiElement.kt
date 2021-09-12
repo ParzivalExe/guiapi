@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack
 
 class GuiElement(tagName: String) : DynamicElement(tagName) {
 
-    override fun CreateObject(library: Library): Any = createGui(library)
+    override fun createObject(library: Library): Any = createGui(library)
 
     fun createGui(library: Library): Gui {
         val gui = Gui(getValueForAttribute("title"))
@@ -19,9 +19,9 @@ class GuiElement(tagName: String) : DynamicElement(tagName) {
         //val library: Library = (content?.elements?.first { element -> element is LibraryElement } as LibraryElement).CreateLibrary()
         content?.elements?.forEach { componentElement ->
             if(componentElement is DynamicElement) {
-                val clazz = componentElement.GetCreateObjectClass(library)
+                val clazz = componentElement.getCreateObjectClass(library)
                 if(clazz != null && Component::class.java.isAssignableFrom(clazz)) {
-                    components.add(componentElement.CreateObject(library) as Component)
+                    components.add(componentElement.createObject(library) as Component)
                 }
             }
         }

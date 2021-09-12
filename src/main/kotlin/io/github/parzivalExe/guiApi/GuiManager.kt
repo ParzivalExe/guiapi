@@ -1,6 +1,5 @@
 package io.github.parzivalExe.guiApi
 
-import io.github.parzivalExe.guiApi.components.ComponentManager
 import org.bukkit.inventory.Inventory
 import kotlin.random.Random
 

@@ -16,6 +16,7 @@ class MessageComponent(meta: ComponentMeta) : Component(meta) {
     @XMLAttribute(defaultValue = "")
     var message: String = ""
 
+    @Suppress("unused")
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {

@@ -11,9 +11,10 @@ import org.bukkit.inventory.ItemStack
 
 class Folder(@XMLContent(necessary = true) var newOpenGui: Gui, meta: ComponentMeta) : Component(meta) {
 
-    var isNewGuiOpened = false
+    private var isNewGuiOpened = false
 
-    constructor() : this(Gui("FolderGui"), ComponentMeta("", ItemStack(Material.CHEST)))
+    @Suppress("unused")
+    internal constructor() : this(Gui("FolderGui"), ComponentMeta("", ItemStack(Material.CHEST)))
 
     override fun finalizeComponent() {
         super.finalizeComponent()

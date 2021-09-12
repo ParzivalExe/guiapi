@@ -2,6 +2,7 @@ package io.github.parzivalExe.guiApi.components
 
 import org.bukkit.inventory.ItemStack
 
+@Suppress("unused")
 class ComponentMeta(var name: String, private var look: ItemStack) {
 
     var description = arrayListOf<String>()

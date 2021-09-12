@@ -5,14 +5,14 @@ import io.github.parzivalExe.guiApi.antlr.elements.*
 import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
 import io.github.parzivalExe.guiApi.antlr.grammar.XMLParserBaseVisitor
 
-class Visitor(val documentContext: XMLParser.DocumentContext) : XMLParserBaseVisitor<IXMLRule>() {
+class Visitor(private val documentContext: XMLParser.DocumentContext) : XMLParserBaseVisitor<IXMLRule>() {
 
 
     fun buildGui(): Gui {
         val guiElement = (visitElement(documentContext.element()) as GuiElement)
 
         val libraryElement = (guiElement.content?.elements?.firstOrNull { element -> element is LibraryElement } ?: LibraryElement()) as LibraryElement
-        val library = libraryElement.CreateLibrary()
+        val library = libraryElement.createLibrary()
 
         return guiElement.createGui(library)
     }
