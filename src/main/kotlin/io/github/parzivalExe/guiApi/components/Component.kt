@@ -16,15 +16,9 @@ abstract class Component(componentMeta: ComponentMeta) {
     @XMLConstructor([
         XMLAttribute(necessary = true, attrName = "title", defaultValue = ""),
         XMLAttribute(necessary = true, attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
-        XMLAttribute(attrName = "description", defaultValue = "[]")
+        XMLAttribute(attrName = "description")
     ])
     var meta = componentMeta
-        set(value) {
-            look = value.buildItem()
-            field = value
-        }
-    var look = meta.buildItem()
-        private set
 
 
     var description: ArrayList<String>
@@ -37,7 +31,7 @@ abstract class Component(componentMeta: ComponentMeta) {
         private set
     var clickAction: ComponentClickAction? = null
 
-    @XMLAttribute(defaultValue = "-1")
+    @XMLAttribute
     var place = -1
 
 
@@ -57,7 +51,7 @@ abstract class Component(componentMeta: ComponentMeta) {
 
 
     open fun getGuiItem(): ItemStack {
-        return look
+        return meta.buildItem()
     }
 
     //region ClickAction

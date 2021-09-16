@@ -33,22 +33,17 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
     var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
 
-    var yesOption = StaticComponent(yesMeta)
-        private set
-        get() {
-            yesMeta.savedObjects[YES_NO_OPTION_KEY] = this
-            return StaticComponent(yesMeta)
-        }
+    val yesOption get() = StaticComponent(yesMeta.apply {
+        savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
+    })
+
 
     @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = ItemStackConverter::class)])
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
 
-    var noOption = StaticComponent(noMeta)
-        private set
-        get() {
-            noMeta.savedObjects[YES_NO_OPTION_KEY] = this
-            return StaticComponent(noMeta)
-        }
+    val noOption get() = StaticComponent(noMeta.apply {
+        savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
+    })
 
     var isOpened = false
     private var newWindowOpening = false
@@ -68,7 +63,7 @@ class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
 
     override fun finalizeComponent() {
         super.finalizeComponent()
-        if(!newWindowOpening) {
+        if(isOpened) {
             yesOption.finalizeComponent()
             noOption.finalizeComponent()
         }

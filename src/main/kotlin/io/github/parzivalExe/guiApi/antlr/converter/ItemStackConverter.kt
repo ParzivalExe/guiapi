@@ -16,7 +16,7 @@ class ItemStackConverter : Converter{
             amount = string.split("x")[0].toInt()
             string = string.split("x")[1]
         }
-        if(string.contains(Regex("\\[\\d+]}"))) {
+        if(string.contains(Regex("\\[\\d+]"))) {
             damage = string.split("[")[1].removeSuffix("]").toShort()
             string = string.split("[")[0]
         }

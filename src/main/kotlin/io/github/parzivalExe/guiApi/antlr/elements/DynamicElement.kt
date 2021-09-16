@@ -93,7 +93,9 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             var xmlName = annotation.attrName
             if (xmlName.isEmpty())
                 xmlName = field.name
-            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, field.type)
+
+            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, field.type) ?: return
+
             try {
                 writeValueIntoField(field, instance, value)
             }catch (e: Exception) {
@@ -137,11 +139,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
                     xmlAttribute.defaultValue,
                     xmlAttribute.converter,
                     String::class.java
-                )
-                    ?: throw XMLAttributeException(
-                        "Value for XMLAttribute \'${xmlAttribute.attrName}\' couldn't be retrieved. " +
-                                "This is either because of false implementation or because you haven't included the attribute in the tag of \'${instance::class.java.canonicalName}\' although it is necessary!"
-                    )
+                ) ?: continue
+
                 valueArray.add(value)
             }
             val typeArray: Array<Class<*>> = valueArray.map { value -> value::class.java }.toTypedArray()
@@ -156,6 +155,9 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
     private fun readAttribute(name: String, defaultValue: String, converter: KClass<out Converter>, finalType: Type): Any? {
         val attrValueString = getValueForAttributeOrNull(name) ?: defaultValue
+
+        if(attrValueString == "*")
+            return null
 
         val valueList = arrayListOf<Any?>()
 
@@ -227,7 +229,10 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             //field is List
             try {
                 val list = getGenericList((field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>)
-                JavaHelper.addValuesToList(list, (value as Collection<*>))
+                if(value is Collection<*>)
+                    JavaHelper.addValuesToList(list, value)
+                else
+                    JavaHelper.addValueToList(list, value)
                 field.set(instance, list)
             }catch (e: Exception) {
                 throw XMLAttributeException("Error while writing ${(field.genericType as ParameterizedType).actualTypeArguments[0]}-List into field \'${field.name}\' for creating \'${instance::class.java.canonicalName}\' instance")

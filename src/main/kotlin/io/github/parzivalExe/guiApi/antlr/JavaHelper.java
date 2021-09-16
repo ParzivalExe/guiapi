@@ -9,4 +9,8 @@ public class JavaHelper {
         list.addAll(values);
     }
 
+    public static void addValueToList(List<Object> list, Object value) {
+        list.add(value);
+    }
+
 }
