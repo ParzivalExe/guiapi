@@ -3,7 +3,7 @@ package io.github.parzivalExe.guiApi.components
 import org.bukkit.inventory.ItemStack
 
 @Suppress("unused")
-class ComponentMeta(var name: String, private var look: ItemStack) {
+class ComponentMeta(var title: String, private var look: ItemStack) {
 
     var description = arrayListOf<String>()
     var savedObjects = hashMapOf<String, Any>()
@@ -32,10 +32,10 @@ class ComponentMeta(var name: String, private var look: ItemStack) {
         this.look = look
     }
 
-    fun buildItem(): ItemStack {
+    internal fun buildItem(): ItemStack {
         val itemMeta = look.itemMeta
         itemMeta.apply {
-            displayName = name
+            displayName = title
             lore = description
         }
         look.itemMeta = itemMeta

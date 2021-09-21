@@ -31,12 +31,18 @@ object ComponentManager {
         return false
     }
 
-    fun isItemComponent(item: ItemStack, itemSlot: Int): Boolean {
-        return components.any { component -> component.meta.buildItem() == item && component.place == itemSlot }
+    fun isItemComponent(item: ItemStack, itemSlot: Int, gui: Gui): Boolean {
+        /*return components.any { component -> component.meta.buildItem() == item && gui.hasComponent(component)
+                && gui.getPositionOfComponent(component) == itemSlot }*/
+        return components.any { component -> component.getGuiItem() == item && gui.hasComponent(component)
+                && gui.getPositionOfComponent(component) == itemSlot }
     }
 
-    fun getComponentFromItem(item: ItemStack, itemSlot: Int): Component? {
-        return components.firstOrNull { component -> component.meta.buildItem() == item && component.place == itemSlot }
+    fun getComponentFromItem(item: ItemStack, itemSlot: Int, gui: Gui): Component? {
+        /*return components.firstOrNull { component -> component.meta.buildItem() == item && gui.hasComponent(component)
+                && gui.getPositionOfComponent(component) == itemSlot }*/
+        return components.firstOrNull { component -> component.getGuiItem() == item && gui.hasComponent(component)
+                && gui.getPositionOfComponent(component) == itemSlot }
     }
 
     fun getAllComponents(): ArrayList<Component> {

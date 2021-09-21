@@ -2,7 +2,6 @@ package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
-import io.github.parzivalExe.guiApi.antlr.converter.OpenOptionConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.events.NoOptionClickedEvent
@@ -15,139 +14,87 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
-@Suppress("MemberVisibilityCanBePrivate")
-class YesNoOption(meta: ComponentMeta) : Component(meta), ComponentClickAction {
+class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), ComponentClickAction {
+
 
     companion object {
-        const val YES_NO_OPTION_KEY = "yesNoComponent"
+        @JvmStatic val YES_NO_OPTION_KEY = "yesNoOption"
     }
 
-    @Suppress("unused")
-    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
-
-    @XMLAttribute(attrName = "dialogTitle", defaultValue = "Yes or No")
-    var yesNoDialogTitle = "Yes or No"
+    constructor(): this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     @Suppress("DEPRECATION")
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
     var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
 
-    val yesOption get() = StaticComponent(yesMeta.apply {
-        savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-    })
+    /*val yesOption get() = StaticComponent(yesMeta.apply {
+        savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew
+        clickAction = this@YesNoOptionNew
+        place = 3
+    })*/
 
+    var yesOption: StaticComponent? = null
 
     @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = ItemStackConverter::class)])
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
 
-    val noOption get() = StaticComponent(noMeta.apply {
-        savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-    })
+    /*val noOption get() = StaticComponent(noMeta.apply {
+        savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew
+        clickAction = this@YesNoOptionNew
+        place = 5
+    })*/
 
-    var isOpened = false
-    private var newWindowOpening = false
-
-    @XMLAttribute(defaultValue = "underInventory", converter = OpenOptionConverter::class)
-    var openOption = OpenOption.UNDER_INVENTORY
-
-
-
-    @Suppress("unused")
-    constructor(meta: ComponentMeta, yesNoDialogTitle: String, yesMeta: ComponentMeta, noMeta: ComponentMeta, openOption: OpenOption) : this(meta) {
-        this.yesNoDialogTitle = yesNoDialogTitle
-        this.yesMeta = yesMeta
-        this.noMeta = noMeta
-        this.openOption = openOption
-    }
-
-    override fun finalizeComponent() {
-        super.finalizeComponent()
-        if(isOpened) {
-            yesOption.finalizeComponent()
-            noOption.finalizeComponent()
-        }
-        isOpened = false
-    }
+    var noOption: StaticComponent? = null
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
-        if(whoClicked is Player) {
-            if (openOption == OpenOption.UNDER_INVENTORY) {
-                openYesNoOptionUnderGui(whoClicked, gui)
-            } else if (openOption == OpenOption.NEW_INVENTORY) {
-                openYesNoOptionInNewGui(whoClicked)
-            }
+        if(isOpened) {
+            //CLOSE
+            super.componentClicked(whoClicked, gui, action, slot, clickType)
+            yesOption?.finalizeComponent()
+            noOption?.finalizeComponent()
+            additionalComponents.clear()
+        }else{
+            //OPEN
+            yesOption = StaticComponent(yesMeta.apply {
+                savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
+                clickAction = this@YesNoOption
+                place = 3
+            })
+            noOption = StaticComponent(noMeta.apply {
+                savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
+                clickAction = this@YesNoOption
+                place = 5
+            })
+            additionalComponents.add(yesOption!!)
+            additionalComponents.add(noOption!!)
+            super.componentClicked(whoClicked, gui, action, slot, clickType)
         }
     }
 
     override fun onClick(component: Component, whoClicked: Player, gui: Gui, action: InventoryAction, clickType: ClickType): Boolean {
         if(component == yesOption) {
+            if(yesOption == null)
+                return false
+
             if(openOption == OpenOption.UNDER_INVENTORY)
-                openYesNoOptionUnderGui(whoClicked, gui)
+                openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }else if(component == noOption) {
+            if(noOption == null)
+                return false
+
             if(openOption == OpenOption.UNDER_INVENTORY)
-                openYesNoOptionUnderGui(whoClicked, gui)
+                openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }
         return false
-    }
-
-    fun openYesNoOptionUnderGui(player: Player, gui: Gui) {
-        if(!isOpened) {
-            /*OPEN UNDER INV*/
-            val size = gui.getSlotCount()
-
-            if(size+8 > Gui.MAX_GUI_SIZE) {
-                /*Gui can't be that big -> open in new Gui is only option*/
-                openYesNoOptionInNewGui(player)
-            }
-
-            gui.setComponent(yesOption, size+3)
-            gui.setComponent(noOption, size+5)
-            if(gui.sizeIsForced()) {
-                gui.forcedSize += 9
-            }
-
-            /*OPEN EDITED GUI*/
-            gui.openGui(player)
-
-            isOpened = true
-        }else{
-            /*CLOSE UNDER INV*/
-            if(gui.sizeIsForced()) {
-                gui.forcedSize -= 9
-            }
-            gui.removeComponents(gui.getSlotCount()-9, gui.getSlotCount()-1)
-
-            gui.openGui(player)
-
-            isOpened = false
-        }
-    }
-
-    fun openYesNoOptionInNewGui(player: Player) {
-        newWindowOpening = true
-        val yesNoGui = Gui(yesNoDialogTitle)
-
-        yesNoGui.setComponent(yesOption, 3)
-        yesNoGui.setComponent(noOption, 5)
-
-        yesNoGui.openGui(player)
-        newWindowOpening = false
-        isOpened = true
-    }
-
-
-
-    enum class OpenOption {
-        UNDER_INVENTORY, NEW_INVENTORY
     }
 
 }

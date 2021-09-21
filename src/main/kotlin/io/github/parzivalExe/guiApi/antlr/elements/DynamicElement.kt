@@ -30,7 +30,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         var className = ""
         try {
             //get clazz
-            val clazz = library.getClassForSynonym(tagName) ?: Class.forName(tagName)
+            val clazz = findClassFromElementName(tagName, library)
             className = clazz.canonicalName
 
             //get XMLAttribute-Fields
@@ -94,7 +94,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             if (xmlName.isEmpty())
                 xmlName = field.name
 
-            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, field.type) ?: return
+            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, annotation.necessary, field.type) ?: return
 
             try {
                 writeValueIntoField(field, instance, value)
@@ -121,7 +121,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             }
         }else if(!field.type.isArray && List::class.java.isAssignableFrom(field.type) && field.genericType is ParameterizedType) {
             //field is List
-            val elements = findElementOfType(field.javaClass.componentType, library)
+            val elements = findElementOfType((field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>, library)
             writeValueIntoField(field, instance, elements.map { element -> (element as DynamicElement).createObject(library) })
         }else{
             //field is value
@@ -134,12 +134,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             val valueArray = arrayListOf<Any>()
             val annotation = field.getAnnotation(XMLConstructor::class.java)
             for (xmlAttribute in annotation.constructorAttributes) {
-                val value = readAttribute(
-                    xmlAttribute.attrName,
-                    xmlAttribute.defaultValue,
-                    xmlAttribute.converter,
-                    String::class.java
-                ) ?: continue
+                val value = readAttribute(xmlAttribute.attrName, xmlAttribute.defaultValue, xmlAttribute.converter, xmlAttribute.necessary, String::class.java)
+                    ?: continue
 
                 valueArray.add(value)
             }
@@ -149,11 +145,14 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
             writeValueIntoField(field, instance, constructedValue)
         }catch (e: Exception) {
-            throw XMLAttributeException("Exception while populating field \'${field.name}\' in instance \'${instance::class.java.canonicalName}\' by creating new instance for creating instance '${instance::class.java.canonicalName}", e)
+            throw XMLAttributeException("Exception while populating field \'${field.name}\' in instance \'${instance::class.java.canonicalName}\' because: ${e.message}", e)
         }
     }
 
-    private fun readAttribute(name: String, defaultValue: String, converter: KClass<out Converter>, finalType: Type): Any? {
+    private fun readAttribute(name: String, defaultValue: String, converter: KClass<out Converter>, necessary: Boolean, finalType: Type): Any? {
+        if(necessary && getValueForAttributeOrNull(name) == null)
+            throw XMLAttributeException("The attribute \'$name\' is not given even though it is necessary.")
+
         val attrValueString = getValueForAttributeOrNull(name) ?: defaultValue
 
         if(attrValueString == "*")
@@ -164,7 +163,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         val isArray = valueStringIsArray(attrValueString)
         for(valueString in valueStringToList(attrValueString)) {
             val value =
-                converter.java.newInstance().attributeStringToValue(valueString, null) ?: continue
+                converter.java.newInstance().attributeStringToValue(valueString.replace("\\,", ","), null) ?: continue
 
             if (value !is String) {
                 valueList.add(value)
@@ -192,7 +191,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
     private fun valueStringToList(valueString: String): Array<String> =
         if(valueString.startsWith("[") && valueString.endsWith("]"))
-            valueString.removePrefix("[").removeSuffix("]").split(',').toList().toMutableList()
+            valueString.removePrefix("[").removeSuffix("]").split(Regex("(?<!\\\\),\\s*")).toList().toMutableList()
                 .mapInPlace { string -> string.removePrefix(" ") }
                 .toTypedArray()
         else
@@ -248,7 +247,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
     }
 
 
-    private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
+    /*private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
         val elements = arrayListOf<Element>()
         val synonym = library.getSynonymForClass(clazz)
         content?.elements?.forEach { element ->
@@ -257,7 +256,23 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             }
         }
         return elements
+    }*/
+
+    private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
+        val elements = arrayListOf<Element>()
+        content?.elements?.forEach { element ->
+            try {
+                val tagClass = findClassFromElementName(element.tagName, library)
+                if(clazz == tagClass || clazz.javaClass.isAssignableFrom(tagClass.javaClass))
+                    elements.add(element)
+            }catch (e: Exception) {
+
+            }
+        }
+        return elements
     }
+
+    private fun findClassFromElementName(tagName: String, library: Library) = library.getClassForSynonym(tagName) ?: Class.forName(tagName)
 
     @Suppress("UNUSED_PARAMETER")
     private fun <T>getGenericList(type: Class<T>): List<T> = ArrayList()

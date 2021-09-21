@@ -17,4 +17,7 @@ commands:
     usage: /componentAmount
   guixml:
     description: create a Test-Gui from Test-XML
-    usage: /guixml
+    usage: /guixml [GuiFile-Name]
+  componentList:
+    description: Get all the components currently registered
+    usage: /componentList

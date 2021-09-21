@@ -3,6 +3,7 @@ package io.github.parzivalExe.guiApi.objects
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+@Suppress("DEPRECATION", "unused")
 class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
 
     companion object {

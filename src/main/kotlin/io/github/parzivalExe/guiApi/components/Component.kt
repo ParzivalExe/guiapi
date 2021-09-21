@@ -14,18 +14,12 @@ import org.bukkit.inventory.ItemStack
 abstract class Component(componentMeta: ComponentMeta) {
 
     @XMLConstructor([
-        XMLAttribute(necessary = true, attrName = "title", defaultValue = ""),
-        XMLAttribute(necessary = true, attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
+        XMLAttribute(attrName = "title", defaultValue = ""),
+        XMLAttribute(attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
-    var meta = componentMeta
+    open var meta = componentMeta
 
-
-    var description: ArrayList<String>
-        set(value) {
-            meta.description = value
-        }
-        get() = meta.description
 
     var id: Int = ComponentManager.getNewComponentId()
         private set
@@ -50,9 +44,7 @@ abstract class Component(componentMeta: ComponentMeta) {
     //endregion
 
 
-    open fun getGuiItem(): ItemStack {
-        return meta.buildItem()
-    }
+    open fun getGuiItem(): ItemStack = meta.buildItem()
 
     //region ClickAction
 
@@ -80,5 +72,8 @@ abstract class Component(componentMeta: ComponentMeta) {
 
     override fun hashCode(): Int = id
 
+    override fun toString(): String =
+        //"${javaClass.simpleName} [$id]:\n  title: ${meta.title}\n  look: ${meta.buildItem()}\n  place: $place"
+        "${javaClass.simpleName} [$id]:\n  title: ${meta.title}\n  look: ${meta.buildItem()}\n  place: $place"
 
 }

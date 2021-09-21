@@ -49,6 +49,7 @@ class GuiApiInitializer : JavaPlugin() {
         getCommand("guiTest").executor = GuiTestCommand()
         getCommand("guiAmount").executor = amountCommand
         getCommand("componentAmount").executor = amountCommand
+        getCommand("componentList").executor = amountCommand
         @Suppress("SpellCheckingInspection")
         getCommand("guixml").executor = GuiXMLCommand()
     }

@@ -15,6 +15,7 @@ class GuiElement(tagName: String) : DynamicElement(tagName) {
         gui.fillItem = ItemStackConverter().attributeStringToValue(getValueForAttributeOrDefault("fillItem", "160:7"), gui.fillItem) as ItemStack
         gui.forcedSize = getValueForAttributeOrDefault("forcedSize", "-1").toInt()
 
+
         val components = arrayListOf<Component>()
         //val library: Library = (content?.elements?.first { element -> element is LibraryElement } as LibraryElement).CreateLibrary()
         content?.elements?.forEach { componentElement ->
