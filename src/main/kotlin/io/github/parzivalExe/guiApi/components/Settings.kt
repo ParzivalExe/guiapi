@@ -52,7 +52,6 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
             else
                 activatedOption++
 
-            //meta = options[activatedOption].meta
             gui.refreshInventory()
 
             Bukkit.getPluginManager().callEvent(SettingsClickedEvent(this, options[clickedOption], options[activatedOption], whoClicked, gui, action, slot, clickType))

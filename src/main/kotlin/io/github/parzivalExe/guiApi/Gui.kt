@@ -103,6 +103,8 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
     @Suppress("unused")
     fun changeOutComponent(oldComponent: Component, newComponent: Component) = changeOutRegisteredComponent(oldComponent, newComponent)
 
+    fun getComponentAtPosition(place: Int) : Component? = getRegisteredComponentAtPosition(place)
+
     //endregion
 
 
