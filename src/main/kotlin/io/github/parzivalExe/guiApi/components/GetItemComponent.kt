@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
-class GetItemComponent(@XMLAttribute(defaultValue = "[0=WHITE_WOOL]", converter = InvItemStackConverter::class) var items: ArrayList<InvItemStack>, meta: ComponentMeta)
+class GetItemComponent(@XMLAttribute(defaultValue = "0=35", converter = InvItemStackConverter::class) var items: ArrayList<InvItemStack>, meta: ComponentMeta)
     : Component(meta) {
 
     @XMLAttribute
@@ -22,9 +22,9 @@ class GetItemComponent(@XMLAttribute(defaultValue = "[0=WHITE_WOOL]", converter 
 
     @Suppress("unused")
     constructor(item: InvItemStack, meta: ComponentMeta) : this(arrayListOf(item), meta)
-    constructor(meta: ComponentMeta) : this(arrayListOf(InvItemStack(Material.WHITE_WOOL, 0)), meta)
+    constructor(meta: ComponentMeta) : this(arrayListOf(InvItemStack(Material.WOOL, 0)), meta)
     @Suppress("unused")
-    constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
+    constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {

@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 class FreeSpaceComponent(meta: ComponentMeta) : Component(meta) {
 
     @Suppress("DEPRECATION", "unused")
-    constructor() : this(ComponentMeta("", ItemStack(Material.BLACK_STAINED_GLASS_PANE)))
+    constructor() : this(ComponentMeta("", ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
 

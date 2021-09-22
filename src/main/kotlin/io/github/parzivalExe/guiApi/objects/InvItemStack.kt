@@ -24,10 +24,22 @@ class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
     }
 
 
-    constructor(type: Material, amount: Int, invPosition: Int)
-            : this(ItemStack(type, amount), invPosition)
+    constructor(type: Material, amount: Int, damage: Short, data: Byte, invPosition: Int)
+            : this(ItemStack(type, amount, damage, data), invPosition)
+
+    constructor(type: Int, amount: Int, damage: Short, data: Byte, invPosition: Int)
+            : this(ItemStack(type, amount, damage, data), invPosition)
+
+    constructor(type: Int, invPosition: Int)
+            : this(type, 1, invPosition)
+
+    constructor(type: Int, amount: Int, invPosition: Int)
+            : this(ItemStack(type, amount, 0, 0), invPosition)
 
     constructor(type: Material, invPosition: Int)
             : this(type, 1, invPosition)
+
+    constructor(type: Material, amount: Int, invPosition: Int)
+            : this(ItemStack(type, amount, 0, 0), invPosition)
 
 }

@@ -12,7 +12,7 @@ class GuiElement(tagName: String) : DynamicElement(tagName) {
     fun createGui(library: Library): Gui {
         val gui = Gui(getValueForAttribute("title"))
         gui.fillEmptyPlaces = getValueForAttributeOrDefault("fillEmptySpaces", "true").toBoolean()
-        gui.fillItem = ItemStackConverter().attributeStringToValue(getValueForAttributeOrDefault("fillItem", "BLACK_STAINED_GLASS_PANE"), gui.fillItem) as ItemStack
+        gui.fillItem = ItemStackConverter().attributeStringToValue(getValueForAttributeOrDefault("fillItem", "160:7"), gui.fillItem) as ItemStack
         gui.forcedSize = getValueForAttributeOrDefault("forcedSize", "-1").toInt()
 
 

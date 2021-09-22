@@ -17,7 +17,7 @@ class MessageComponent(meta: ComponentMeta) : Component(meta) {
     var message: String = ""
 
     @Suppress("unused")
-    internal constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
+    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if(whoClicked is Player) {

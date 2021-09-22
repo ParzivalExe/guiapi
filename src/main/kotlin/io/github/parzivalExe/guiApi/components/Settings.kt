@@ -20,7 +20,7 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
     internal constructor() : this(arrayListOf(
         SettingOption(ComponentMeta("beginner", ItemStack(Material.APPLE))),
         SettingOption(ComponentMeta("Advanced", ItemStack(Material.GOLDEN_APPLE))),
-        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.ENCHANTED_GOLDEN_APPLE))))
+        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.GOLDEN_APPLE, 1, 0, 1))))
     )
 
     private var activatedOption = 0

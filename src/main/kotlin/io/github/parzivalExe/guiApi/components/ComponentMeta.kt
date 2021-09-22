@@ -34,8 +34,8 @@ class ComponentMeta(var title: String, private var look: ItemStack) {
 
     internal fun buildItem(): ItemStack {
         val itemMeta = look.itemMeta
-        itemMeta?.apply {
-            setDisplayName(title)
+        itemMeta.apply {
+            displayName = title
             lore = description
         }
         look.itemMeta = itemMeta

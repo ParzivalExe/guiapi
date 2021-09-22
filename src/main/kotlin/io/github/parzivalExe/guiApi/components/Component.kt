@@ -15,7 +15,7 @@ abstract class Component(componentMeta: ComponentMeta) {
 
     @XMLConstructor([
         XMLAttribute(attrName = "title", defaultValue = ""),
-        XMLAttribute(attrName = "look", defaultValue = "WHITE_WOOL", converter = ItemStackConverter::class),
+        XMLAttribute(attrName = "look", defaultValue = "35", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
     open var meta = componentMeta

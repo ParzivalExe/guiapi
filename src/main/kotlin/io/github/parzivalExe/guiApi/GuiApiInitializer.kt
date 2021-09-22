@@ -45,13 +45,13 @@ class GuiApiInitializer : JavaPlugin() {
 
     private fun registerCommands() {
         val amountCommand = GetAmountCommand()
-        getCommand("itemEqualsTest")?.setExecutor(ItemEqualsTestCommand())
-        getCommand("guiTest")?.setExecutor(GuiTestCommand())
-        getCommand("guiAmount")?.setExecutor(amountCommand)
-        getCommand("componentAmount")?.setExecutor(amountCommand)
-        getCommand("componentList")?.setExecutor(amountCommand)
+        getCommand("itemEqualsTest").executor = ItemEqualsTestCommand()
+        getCommand("guiTest").executor = GuiTestCommand()
+        getCommand("guiAmount").executor = amountCommand
+        getCommand("componentAmount").executor = amountCommand
+        getCommand("componentList").executor = amountCommand
         @Suppress("SpellCheckingInspection")
-        getCommand("guixml")?.setExecutor(GuiXMLCommand())
+        getCommand("guixml").executor = GuiXMLCommand()
     }
 
     private fun registerConfig() {
