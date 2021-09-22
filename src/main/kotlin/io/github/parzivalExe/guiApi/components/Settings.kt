@@ -24,6 +24,12 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
     )
 
     private var activatedOption = 0
+        /*set(value) {
+            field = value
+            meta = options[value].meta.apply {
+                description = this@Settings.meta.description
+            }
+        }*/
 
 
     @Suppress("MemberVisibilityCanBePrivate")

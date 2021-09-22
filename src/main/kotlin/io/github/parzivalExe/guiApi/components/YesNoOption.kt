@@ -58,16 +58,14 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
             //OPEN
             yesOption = StaticComponent(yesMeta.apply {
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-            }).apply {
-                place = 3
                 clickAction = this@YesNoOption
-            }
+                place = 3
+            })
             noOption = StaticComponent(noMeta.apply {
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-            }).apply {
-                place = 5
                 clickAction = this@YesNoOption
-            }
+                place = 5
+            })
             additionalComponents.add(yesOption!!)
             additionalComponents.add(noOption!!)
             super.componentClicked(whoClicked, gui, action, slot, clickType)
@@ -83,7 +81,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }else if(component == noOption) {
             if(noOption == null)
@@ -93,7 +91,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }
         return false
