@@ -29,9 +29,10 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
 
     override fun finalizeComponent() {
         super.finalizeComponent()
-        for(additionalComponent in additionalComponents) {
-            @Suppress("UNNECESSARY_SAFE_CALL")
-            additionalComponent?.finalizeComponent()
+        if(openOption != OpenOption.NEW_INVENTORY || !isOpened) {
+            for (additionalComponent in additionalComponents) {
+                additionalComponent.finalizeComponent()
+            }
         }
     }
 
@@ -49,7 +50,7 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
             gui.positionOffsetFromPosition(startPosition, ceil(additionalComponents.count()/9.0).toInt()*9)
             for ((index, component) in additionalComponents.withIndex()) {
                 if(component.place >= 0)
-                    component.place = startPosition + index + component.place
+                    component.place = startPosition + component.place
                 else
                     component.place = startPosition + index
                 gui.addComponent(component)
@@ -74,8 +75,8 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
             return
         val newGui = Gui(if(newInvTitle == "?") meta.title else newInvTitle)
         additionalComponents.forEach { newGui.addComponent(it) }
-        newGui.openGui(gui.openedPlayer!!)
         isOpened = true
+        newGui.openGui(gui.openedPlayer!!)
     }
 
 

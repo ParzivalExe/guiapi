@@ -58,14 +58,16 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
             //OPEN
             yesOption = StaticComponent(yesMeta.apply {
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-                clickAction = this@YesNoOption
+            }).apply {
                 place = 3
-            })
+                clickAction = this@YesNoOption
+            }
             noOption = StaticComponent(noMeta.apply {
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
-                clickAction = this@YesNoOption
+            }).apply {
                 place = 5
-            })
+                clickAction = this@YesNoOption
+            }
             additionalComponents.add(yesOption!!)
             additionalComponents.add(noOption!!)
             super.componentClicked(whoClicked, gui, action, slot, clickType)
