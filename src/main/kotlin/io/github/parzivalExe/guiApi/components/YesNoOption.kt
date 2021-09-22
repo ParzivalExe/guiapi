@@ -22,11 +22,11 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
     }
 
 
-    constructor(): this(ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor(): this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
     @Suppress("DEPRECATION")
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
-    var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
+    var yesMeta = ComponentMeta("YES", ItemStack(Material.GREEN_WOOL))
 
     /*val yesOption get() = StaticComponent(yesMeta.apply {
         savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew
@@ -81,7 +81,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }else if(component == noOption) {
             if(noOption == null)
@@ -91,7 +91,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 openUnderInventory(gui)
             else
                 gui.closeGui()
-            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YesNoOption.YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
+            Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
             return true
         }
         return false

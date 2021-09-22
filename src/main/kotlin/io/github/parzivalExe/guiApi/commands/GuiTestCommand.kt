@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 
 class GuiTestCommand : CommandExecutor{
 
-    override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
         @Suppress("DEPRECATION")
         if(sender is Player) {
@@ -22,9 +22,9 @@ class GuiTestCommand : CommandExecutor{
                     SettingOption(ComponentMeta("NORMAL", ItemStack(Material.GOLDEN_APPLE))),
                     SettingOption(ComponentMeta("OP", ItemStack(Material.GOLDEN_APPLE, 1, 0, 1))))
             ))
-            gui2.setComponent(MessageComponent(ComponentMeta("Record", ItemStack(Material.GOLD_RECORD))).apply { message = "This is a record of the developer" }, 8)
-            gui2.setComponent(YesNoOption(ComponentMeta("UnderInv", ItemStack(Material.SIGN))), 2)
-            gui2.setComponent(YesNoOption(ComponentMeta("NewInv", ItemStack(Material.SIGN))).apply {
+            gui2.setComponent(MessageComponent(ComponentMeta("Record", ItemStack(Material.MUSIC_DISC_13))).apply { message = "This is a record of the developer" }, 8)
+            gui2.setComponent(YesNoOption(ComponentMeta("UnderInv", ItemStack(Material.OAK_SIGN))), 2)
+            gui2.setComponent(YesNoOption(ComponentMeta("NewInv", ItemStack(Material.OAK_SIGN))).apply {
                 openOption = OpenOption.NEW_INVENTORY
             }, 3)
             val yesNoSetting = YesNoSetting()

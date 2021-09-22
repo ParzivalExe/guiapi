@@ -1,5 +1,6 @@
 package io.github.parzivalExe.guiApi.antlr.converter
 
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class ItemStackConverter : Converter{
@@ -24,9 +25,9 @@ class ItemStackConverter : Converter{
             data = string.split(":")[1].toByte()
             string = string.split(":")[0]
         }
-        val type: Int = string.toInt()
+        val type = string.toIntOrNull() ?: string
 
         @Suppress("DEPRECATION")
-        return ItemStack(type, amount, damage, data)
+        return ItemStack(Material.getMaterial(type.toString())!!, amount, damage, data)
     }
 }

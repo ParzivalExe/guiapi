@@ -16,7 +16,7 @@ class TeleportComponent(@XMLAttribute(necessary = true, attrName = "location", d
 
     constructor(componentMeta: ComponentMeta) : this(TeleportLocation(), componentMeta)
 
-    constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if (whoClicked is Player) {

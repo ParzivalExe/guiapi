@@ -58,7 +58,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
     var fillEmptyPlaces = true
     @Suppress("DEPRECATION")
     @XMLAttribute(defaultValue = "160:7", converter = ItemStackConverter::class)
-    var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
+    var fillItem = ItemStack(Material.BLACK_STAINED_GLASS_PANE, 1, 0, 7)
 
     var inventory: Inventory? = null
     var openedPlayer: Player? = null
@@ -288,7 +288,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         }
 
         if(newInventory)
-            openedPlayer?.openInventory(inventory)
+            openedPlayer?.openInventory(inventory!!)
         else
             openedPlayer?.updateInventory()
 

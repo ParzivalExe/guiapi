@@ -23,7 +23,7 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
     protected var isOpened = false
 
 
-    constructor() : this(arrayListOf<Component>(), ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor() : this(arrayListOf<Component>(), ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
     constructor(meta: ComponentMeta) : this(arrayListOf(), meta)
 
 

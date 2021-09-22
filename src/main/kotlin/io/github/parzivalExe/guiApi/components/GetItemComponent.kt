@@ -22,9 +22,9 @@ class GetItemComponent(@XMLAttribute(defaultValue = "0=35", converter = InvItemS
 
     @Suppress("unused")
     constructor(item: InvItemStack, meta: ComponentMeta) : this(arrayListOf(item), meta)
-    constructor(meta: ComponentMeta) : this(arrayListOf(InvItemStack(Material.WOOL, 0)), meta)
+    constructor(meta: ComponentMeta) : this(arrayListOf(InvItemStack(Material.WHITE_WOOL, 0)), meta)
     @Suppress("unused")
-    constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
