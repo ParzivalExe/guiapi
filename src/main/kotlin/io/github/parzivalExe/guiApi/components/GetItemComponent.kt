@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
-class GetItemComponent(@XMLAttribute(defaultValue = "0=35", converter = InvItemStackConverter::class) var items: ArrayList<InvItemStack>, meta: ComponentMeta)
+class GetItemComponent(@XMLAttribute(defaultValue = "[0=WHITE_WOOL]", converter = InvItemStackConverter::class) var items: ArrayList<InvItemStack>, meta: ComponentMeta)
     : Component(meta) {
 
     @XMLAttribute

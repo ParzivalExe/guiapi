@@ -30,7 +30,8 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
     override fun finalizeComponent() {
         super.finalizeComponent()
         for(additionalComponent in additionalComponents) {
-            additionalComponent.finalizeComponent()
+            @Suppress("UNNECESSARY_SAFE_CALL")
+            additionalComponent?.finalizeComponent()
         }
     }
 
