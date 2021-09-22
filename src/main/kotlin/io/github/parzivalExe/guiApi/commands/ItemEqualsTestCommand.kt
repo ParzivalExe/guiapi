@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack
 class ItemEqualsTestCommand : CommandExecutor{
 
 
-    override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender is Player) {
 
             val item = ItemStack(Material.APPLE)

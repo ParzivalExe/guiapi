@@ -22,11 +22,11 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
     }
 
 
-    constructor(): this(ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor(): this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
     @Suppress("DEPRECATION")
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
-    var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
+    var yesMeta = ComponentMeta("YES", ItemStack(Material.GREEN_WOOL))
 
     /*val yesOption get() = StaticComponent(yesMeta.apply {
         savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew

@@ -25,7 +25,7 @@ class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
 
 
     @Suppress("unused")
-    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    internal constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         Bukkit.getPluginManager().callEvent(EventComponentClickedEvent(this, whoClicked, gui, action, slot, clickType))
