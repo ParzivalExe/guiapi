@@ -3,7 +3,9 @@ package io.github.parzivalExe.guiApi.components
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.converter.InvItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
+import io.github.parzivalExe.guiApi.events.GetItemComponentEvent
 import io.github.parzivalExe.guiApi.objects.InvItemStack
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -46,6 +48,7 @@ class GetItemComponent(@XMLAttribute(defaultValue = "0=35", converter = InvItemS
                 }
             }
             whoClicked.updateInventory()
+            Bukkit.getPluginManager().callEvent(GetItemComponentEvent(this, whoClicked, gui, action, place, items.toTypedArray()))
         }
         if(closeGui)
             gui.closeGui()

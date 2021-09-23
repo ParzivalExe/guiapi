@@ -4,6 +4,8 @@ import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.converter.OpenOptionConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
+import io.github.parzivalExe.guiApi.events.ExpandAdditionalOptionsEvent
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.event.inventory.ClickType
@@ -39,12 +41,12 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         when(openOption) {
-            OpenOption.UNDER_INVENTORY -> openUnderInventory(gui)
-            OpenOption.NEW_INVENTORY -> openNewInventory(gui)
+            OpenOption.UNDER_INVENTORY -> openUnderInventory(whoClicked, gui, action, clickType)
+            OpenOption.NEW_INVENTORY -> openNewInventory(whoClicked, gui, action, clickType)
         }
     }
 
-    internal fun openUnderInventory(gui: Gui) {
+    internal fun openUnderInventory(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, clickType: ClickType) {
         val startPosition = (gui.getPositionOfComponent(this) / 9 + 1) * 9
         if(!isOpened) {
             gui.positionOffsetFromPosition(startPosition, ceil(additionalComponents.count()/9.0).toInt()*9)
@@ -58,25 +60,26 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
         }else{
             additionalComponents.forEachIndexed { index, component ->
                 if(component is AdditionalOptionsComponent && component.isOpened)
-                    component.openUnderInventory(gui)
+                    component.openUnderInventory(whoClicked, gui, action, clickType)
 
                 gui.removeComponent(component)
                 component.place = component.place - startPosition - index
             }
             gui.positionOffsetFromPosition(startPosition, -ceil(additionalComponents.count()/9.0).toInt()*9)
         }
-
         isOpened = !isOpened
+        Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    internal fun openNewInventory(gui: Gui) {
+    internal fun openNewInventory(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, clickType: ClickType) {
         if(gui.openedPlayer == null)
             return
         val newGui = Gui(if(newInvTitle == "?") meta.title else newInvTitle)
         additionalComponents.forEach { newGui.addComponent(it) }
         isOpened = true
         newGui.openGui(gui.openedPlayer!!)
+        Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
     }
 
 

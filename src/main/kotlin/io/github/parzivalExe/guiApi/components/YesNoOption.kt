@@ -60,13 +60,13 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
             }).apply {
                 place = 3
-                clickAction = this@YesNoOption
+                addClickListener(this@YesNoOption)
             }
             noOption = StaticComponent(noMeta.apply {
                 savedObjects[YES_NO_OPTION_KEY] = this@YesNoOption
             }).apply {
                 place = 5
-                clickAction = this@YesNoOption
+                addClickListener(this@YesNoOption)
             }
             additionalComponents.add(yesOption!!)
             additionalComponents.add(noOption!!)
@@ -80,7 +80,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 return false
 
             if(openOption == OpenOption.UNDER_INVENTORY)
-                openUnderInventory(gui)
+                openUnderInventory(whoClicked, gui, action, clickType)
             else
                 gui.closeGui()
             Bukkit.getPluginManager().callEvent(YesOptionClickedEvent(yesOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))
@@ -90,7 +90,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
                 return false
 
             if(openOption == OpenOption.UNDER_INVENTORY)
-                openUnderInventory(gui)
+                openUnderInventory(whoClicked, gui, action, clickType)
             else
                 gui.closeGui()
             Bukkit.getPluginManager().callEvent(NoOptionClickedEvent(noOption!!.meta.savedObjects[YES_NO_OPTION_KEY] as YesNoOption, component as StaticComponent, gui, whoClicked, action, component.place, clickType))

@@ -2,6 +2,8 @@ package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
+import io.github.parzivalExe.guiApi.events.FolderOpenedEvent
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -28,6 +30,7 @@ class Folder(@XMLContent(necessary = true) var newOpenGui: Gui?, meta: Component
             if(newOpenGui != null) {
                 isNewGuiOpened = true
                 newOpenGui?.openGui(whoClicked)
+                Bukkit.getPluginManager().callEvent(FolderOpenedEvent(this, whoClicked, gui, action, place, clickType, newOpenGui!!))
             }
         }
     }
