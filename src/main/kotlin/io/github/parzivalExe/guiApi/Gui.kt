@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import java.io.File
 import java.io.InputStream
+import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title: String) {
@@ -27,6 +28,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         const val MAX_GUI_SIZE = 54
 
         private const val FILL_ITEM = "fillItem"
+        const val SAVE_KEY_OPEN_CLASS = "openClass"
 
         @JvmStatic
         fun createGuiFromFile(path: String): Gui = createGuiFromCharStream(CharStreams.fromFileName(path))
@@ -36,6 +38,22 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         @JvmStatic
         @Suppress("unused")
         fun createGuiFromFile(file: File): Gui = createGuiFromCharStream(CharStreams.fromStream(file.inputStream()))
+        @JvmStatic
+        @Suppress("unused")
+        fun createGuiFromProjectFile(projectPath: String): Gui? =
+            createGuiFromProjectFile(projectPath, Class.forName(Thread.currentThread().stackTrace[3].className))
+        @JvmStatic
+        @Suppress("unused", "SpellCheckingInspection")
+        fun createGuiFromProjectFile(projectPath: String, originClass: Class<*>): Gui? = createGuiFromProjectFile("", projectPath, "mgui", originClass)
+        @JvmStatic
+        @Suppress("unused")
+        fun createGuiFromProjectFile(path: String, fileName: String, fileType: String): Gui? = createGuiFromProjectFile(path, fileName, fileType, Class.forName(Thread.currentThread().stackTrace[2].className))
+        @JvmStatic
+        @Suppress("unused")
+        fun createGuiFromProjectFile(path: String, fileName: String, fileType: String, clazz: Class<*>): Gui? {
+            val inputStream = clazz.getResourceAsStream("$path/$fileName.$fileType") ?: return null
+            return createGuiFromInputStream(inputStream)
+        }
 
         private fun createGuiFromCharStream(charStream: CharStream): Gui {
             val lexer = XMLLexer(charStream)
@@ -62,6 +80,8 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     var inventory: Inventory? = null
     var openedPlayer: Player? = null
+
+    private val savedObjects = hashMapOf<String, Any?>()
 
     private val registeredComponents = hashMapOf<Component, Int>()
 
@@ -90,6 +110,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return position
     }
 
+    @Suppress("unused")
     fun removeComponents(startPosition: Int, endPosition: Int) = removeRegisteredComponents(startPosition, endPosition)
     @Suppress("unused")
     fun removeComponent(position: Int) = removeRegisteredComponentAtPosition(position)
@@ -103,6 +124,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
     @Suppress("unused")
     fun changeOutComponent(oldComponent: Component, newComponent: Component) = changeOutRegisteredComponent(oldComponent, newComponent)
 
+    @Suppress("unused")
     fun getComponentAtPosition(place: Int) : Component? = getRegisteredComponentAtPosition(place)
 
     //endregion
@@ -211,11 +233,6 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return -1
     }
 
-    private fun clearRegisteredComponents() {
-        registeredComponents.keys.forEach { it.finalizeComponent() }
-        registeredComponents.clear()
-    }
-
     fun positionOffsetFromPosition(startPosition: Int, offset: Int) {
         @Suppress("UNCHECKED_CAST")
         (registeredComponents.clone() as HashMap<Component, Int>).forEach { (component, place) ->
@@ -244,21 +261,29 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return -1
     }
 
-    private fun clearFillers() {
-        registeredFillers.keys.forEach { it.finalizeComponent() }
-        registeredFillers.clear()
-    }
-
     //endregion
 
     //endregion
-
-
 
     //region Create/Refresh Gui
 
+    @Suppress("unused")
     fun openGui(player: Player) {
+        val openClass = Class.forName(Thread.currentThread().stackTrace[2].className)
+        openGui(player, openClass)
+    }
+
+    fun openGui(player: Player, guiBefore: Gui) {
+        val openClass = guiBefore.savedObjects[SAVE_KEY_OPEN_CLASS]
+        if(openClass == null)
+            openGui(player)
+        else
+            openGui(player, openClass as Class<*>)
+    }
+
+    fun openGui(player: Player, openClass: Class<*>) {
         openedPlayer = player
+        saveObject(SAVE_KEY_OPEN_CLASS, openClass)
         refreshInventory()
     }
 
@@ -378,6 +403,18 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         }
         GuiManager.finalizeGui(this)
     }
+
+    //endregion
+
+    //region SavedObjects Functions
+
+    fun saveObject(key: String, value: Any?) {
+        savedObjects[key] = value
+    }
+    fun getObject(key: String): Any? =
+        savedObjects.getOrDefault(key, null)
+    fun hasObjectSaved(key: String): Boolean =
+        savedObjects.containsKey(key)
 
     //endregion
 

@@ -1,35 +1,33 @@
 package io.github.parzivalExe.guiApi.events;
 
 import io.github.parzivalExe.guiApi.Gui;
-import io.github.parzivalExe.guiApi.components.GetItemComponent;
-import io.github.parzivalExe.guiApi.objects.InvItemStack;
+import io.github.parzivalExe.guiApi.components.Component;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 
-import java.util.ArrayList;
+public class ComponentClickedEvent extends Event {
 
-public class GetItemComponentEvent extends Event {
-
-    private final GetItemComponent getItemComponent;
+    private final Component clickedComponent;
     private final HumanEntity whoClicked;
     private final Gui gui;
     private final InventoryAction action;
     private final int slot;
-    private final InvItemStack[] givenItems;
+    private final ClickType clickType;
 
-    public GetItemComponentEvent(GetItemComponent getItemComponent, HumanEntity whoClicked, Gui gui, InventoryAction action, int slot, InvItemStack[] givenItems) {
-        this.getItemComponent = getItemComponent;
+    public ComponentClickedEvent(Component clickedComponent, HumanEntity whoClicked, Gui gui, InventoryAction action, int slot, ClickType clickType) {
+        this.clickedComponent = clickedComponent;
         this.whoClicked = whoClicked;
         this.gui = gui;
         this.action = action;
         this.slot = slot;
-        this.givenItems = givenItems;
+        this.clickType = clickType;
     }
 
-    public GetItemComponent getGetItemComponent() {
-        return getItemComponent;
+    public Component getClickedComponent() {
+        return clickedComponent;
     }
 
     public HumanEntity getWhoClicked() {
@@ -48,14 +46,23 @@ public class GetItemComponentEvent extends Event {
         return slot;
     }
 
-    public InvItemStack[] getGivenItems() {
-        return givenItems;
+    public ClickType getClickType() {
+        return clickType;
     }
 
-    //region Handler
+    public boolean isGuiOpenedInClass(Class<?> clazz) {
+        return gui.getObject(Gui.SAVE_KEY_OPEN_CLASS) == clazz;
+    }
+    public boolean isGuiOpenedInThisClass() {
+        try {
+            return isGuiOpenedInClass(Class.forName(Thread.currentThread().getStackTrace()[2].getClassName()));
+        }catch (Exception e) {
+            return false;
+        }
+    }
 
+    //region NeededEventMethods
     public static HandlerList handlerList = new HandlerList();
-
 
     @Override
     public HandlerList getHandlers() {
@@ -67,6 +74,5 @@ public class GetItemComponentEvent extends Event {
     }
 
     //endregion
-
 
 }

@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
 
-class TeleportComponent(@XMLAttribute(necessary = true, attrName = "location", defaultValue = "*:*,*,*", converter = TeleportLocationConverter::class)
+class TeleportComponent(@XMLAttribute(attrName = "location", converter = TeleportLocationConverter::class)
                         var finalLocation: TeleportLocation, componentMeta: ComponentMeta) : Component(componentMeta) {
 
     constructor(componentMeta: ComponentMeta) : this(TeleportLocation(), componentMeta)

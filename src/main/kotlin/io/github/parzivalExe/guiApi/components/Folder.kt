@@ -29,7 +29,7 @@ class Folder(@XMLContent(necessary = true) var newOpenGui: Gui?, meta: Component
         if(whoClicked is Player) {
             if(newOpenGui != null) {
                 isNewGuiOpened = true
-                newOpenGui?.openGui(whoClicked)
+                newOpenGui?.openGui(whoClicked, gui)
                 Bukkit.getPluginManager().callEvent(FolderOpenedEvent(this, whoClicked, gui, action, place, clickType, newOpenGui!!))
             }
         }

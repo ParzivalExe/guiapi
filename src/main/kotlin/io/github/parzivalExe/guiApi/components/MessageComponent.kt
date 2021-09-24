@@ -23,7 +23,7 @@ class MessageComponent(meta: ComponentMeta) : Component(meta) {
         if(whoClicked is Player) {
             whoClicked.sendMessage(message)
             gui.closeGui()
-            Bukkit.getPluginManager().callEvent(MessageComponentClickedEvent(this, whoClicked, gui, action, slot, clickType))
+            Bukkit.getPluginManager().callEvent(MessageComponentClickedEvent(this, whoClicked, gui, action, slot, clickType, message))
         }
     }
 

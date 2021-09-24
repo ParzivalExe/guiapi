@@ -78,7 +78,7 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
         val newGui = Gui(if(newInvTitle == "?") meta.title else newInvTitle)
         additionalComponents.forEach { newGui.addComponent(it) }
         isOpened = true
-        newGui.openGui(gui.openedPlayer!!)
+        newGui.openGui(gui.openedPlayer!!, gui)
         Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
     }
 
