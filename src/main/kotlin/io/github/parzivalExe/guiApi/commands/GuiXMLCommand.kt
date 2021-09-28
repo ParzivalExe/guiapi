@@ -2,6 +2,7 @@ package io.github.parzivalExe.guiApi.commands
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.GuiApiInitializer
+import io.github.parzivalExe.guiApi.PathOrigin
 import io.github.parzivalExe.guiApi.components.Component
 import io.github.parzivalExe.guiApi.components.ComponentClickAction
 import org.bukkit.command.Command
@@ -17,7 +18,7 @@ class GuiXMLCommand : CommandExecutor {
     override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
         if(sender is Player && args!!.size == 1) {
             @Suppress("SpellCheckingInspection")
-            val gui = Gui.createGuiFromFile("plugins/GuiAPI/Guis/${args[0]}.mgui")
+            val gui = Gui.createGui("plugins/GuiAPI/Guis/${args[0]}", PathOrigin.SERVER_ORIGIN)
             gui.openGui(sender)
             return true
         }

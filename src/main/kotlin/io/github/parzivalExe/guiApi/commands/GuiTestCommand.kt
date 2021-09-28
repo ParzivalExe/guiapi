@@ -38,7 +38,7 @@ class GuiTestCommand : CommandExecutor {
             val staticComponent2 = StaticComponent(ComponentMeta("TestStatic2", ItemStack(Material.GOLDEN_APPLE)))
             gui.addComponent(staticComponent)
             gui.addComponent(staticComponent2)
-            gui.setComponent(Folder(gui2, ComponentMeta("TestFolder", ItemStack(Material.CHEST))), 4)
+            gui.setComponent(Folder(ComponentMeta("TestFolder", ItemStack(Material.CHEST)), gui2), 4)
             gui.openGui(sender)
         }
 

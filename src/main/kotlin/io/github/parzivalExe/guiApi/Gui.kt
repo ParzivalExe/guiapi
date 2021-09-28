@@ -8,6 +8,9 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.components.Component
 import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.FreeSpaceComponent
+import io.github.parzivalExe.guiApi.events.GuiCloseEvent
+import io.github.parzivalExe.guiApi.events.GuiOpenEvent
+import io.github.parzivalExe.guiApi.events.GuiRefreshEvent
 import io.github.parzivalExe.guiApi.exceptions.GuiCreateException
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
@@ -30,8 +33,28 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         private const val FILL_ITEM = "fillItem"
         const val SAVE_KEY_OPEN_CLASS = "openClass"
 
+
+        fun createGui(externalGui: ExternalGui) = externalGui.getGui()
+        fun createGui(path: String, pathOrigin: PathOrigin): Gui = createGui(path, "mgui", pathOrigin)
+        fun createGui(path: String, fileType: String, pathOrigin: PathOrigin): Gui {
+            val clazz = Class.forName(Thread.currentThread().stackTrace[3].className)
+            return createGui(path, fileType, pathOrigin, clazz)
+        }
+        internal fun createGui(path: String, fileType: String, pathOrigin: PathOrigin, creationClass: Class<*>): Gui {
+            val charStream = when(pathOrigin) {
+                PathOrigin.PC_ORIGIN -> CharStreams.fromFileName("/$path.$fileType")
+                PathOrigin.SERVER_ORIGIN -> CharStreams.fromFileName("$path.$fileType")
+                PathOrigin.PROJECT_ORIGIN -> {
+                    val inputStream = creationClass.getResourceAsStream("/$path.$fileType")
+                    CharStreams.fromStream(inputStream)
+                }
+            }
+            return createGuiFromCharStream(charStream)
+        }
+        /*@JvmStatic
+        fun createGuiFromFile(path: String): Gui = createGuiFromFile(path, "mgui")
         @JvmStatic
-        fun createGuiFromFile(path: String): Gui = createGuiFromCharStream(CharStreams.fromFileName(path))
+        fun createGuiFromFile(path: String, fileType: String): Gui = createGuiFromCharStream(CharStreams.fromFileName("$path.$fileType"))
         @JvmStatic
         @Suppress("unused")
         fun createGuiFromInputStream(inputStream: InputStream): Gui = createGuiFromCharStream(CharStreams.fromStream(inputStream))
@@ -43,8 +66,10 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         fun createGuiFromProjectFile(projectPath: String): Gui? =
             createGuiFromProjectFile(projectPath, Class.forName(Thread.currentThread().stackTrace[3].className))
         @JvmStatic
-        @Suppress("unused", "SpellCheckingInspection")
+        @Suppress("unused")
         fun createGuiFromProjectFile(projectPath: String, originClass: Class<*>): Gui? = createGuiFromProjectFile("", projectPath, "mgui", originClass)
+        @JvmStatic
+        fun createGuiFromProjectFile(projectPath: String, fileType: String, originClass: Class<*>): Gui? = createGuiFromProjectFile("", projectPath, fileType, originClass)
         @JvmStatic
         @Suppress("unused")
         fun createGuiFromProjectFile(path: String, fileName: String, fileType: String): Gui? = createGuiFromProjectFile(path, fileName, fileType, Class.forName(Thread.currentThread().stackTrace[2].className))
@@ -53,7 +78,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         fun createGuiFromProjectFile(path: String, fileName: String, fileType: String, clazz: Class<*>): Gui? {
             val inputStream = clazz.getResourceAsStream("$path/$fileName.$fileType") ?: return null
             return createGuiFromInputStream(inputStream)
-        }
+        }*/
 
         private fun createGuiFromCharStream(charStream: CharStream): Gui {
             val lexer = XMLLexer(charStream)
@@ -65,6 +90,15 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             val visitor = Visitor(documentContext)
             return visitor.buildGui()
         }
+
+        @JvmStatic
+        fun closeGui(player: Player) {
+            if(!GuiManager.isInventoryGui(player.openInventory.topInventory))
+                return
+            val gui = GuiManager.getGuiFromInventory(player.openInventory.topInventory) ?: return
+            gui.closeGui()
+        }
+
     }
 
     constructor() : this("NoTitleSet")
@@ -126,6 +160,9 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     @Suppress("unused")
     fun getComponentAtPosition(place: Int) : Component? = getRegisteredComponentAtPosition(place)
+
+    @Suppress("unused")
+    fun getAllComponents(): Array<Component> = registeredComponents.keys.toTypedArray()
 
     //endregion
 
@@ -285,6 +322,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         openedPlayer = player
         saveObject(SAVE_KEY_OPEN_CLASS, openClass)
         refreshInventory()
+        Bukkit.getPluginManager().callEvent(GuiOpenEvent(this, player))
     }
 
     fun refreshInventory() {
@@ -318,7 +356,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             openedPlayer?.openInventory(inventory)
         else
             openedPlayer?.updateInventory()
-
+        Bukkit.getPluginManager().callEvent(GuiRefreshEvent(this, openedPlayer))
     }
 
     fun getSlotCount(): Int {
@@ -371,7 +409,11 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
                         savedObjects[FILL_ITEM] = true
                     })] = i
                 }else if(getRegisteredComponentAtPosition(i) is FreeSpaceComponent) {
-                    registeredComponents.filterValues { it == i }.keys.firstOrNull()?.meta = ComponentMeta(" ", ItemStack(fillItem))
+                    val freeSpace = getRegisteredComponentAtPosition(i) as FreeSpaceComponent
+                    if(!freeSpace.forceNoFill) {
+                        registeredComponents.filterValues { it == i }.keys.firstOrNull()?.meta =
+                            ComponentMeta(" ", ItemStack(fillItem))
+                    }
                 }else if(registeredComponents.containsValue(i) && registeredFillers.containsValue(i)) {
                     val filler = getRegisteredFillerAtPosition(i) ?: continue
                     filler.finalizeComponent()
@@ -402,6 +444,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             filler.finalizeComponent()
         }
         GuiManager.finalizeGui(this)
+        Bukkit.getPluginManager().callEvent(GuiCloseEvent(this, openedPlayer))
     }
 
     //endregion

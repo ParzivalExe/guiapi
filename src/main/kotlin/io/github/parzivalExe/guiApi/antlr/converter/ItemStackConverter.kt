@@ -27,6 +27,8 @@ class ItemStackConverter : Converter{
         val type: Int = string.toInt()
 
         @Suppress("DEPRECATION")
-        return ItemStack(type, amount, damage, data)
+        return ItemStack(type, amount, 0, data).apply {
+            durability = damage
+        }
     }
 }

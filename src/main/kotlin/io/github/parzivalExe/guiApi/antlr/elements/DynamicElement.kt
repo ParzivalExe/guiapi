@@ -125,7 +125,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             writeValueIntoField(field, instance, elements.map { element -> (element as DynamicElement).createObject(library) })
         }else{
             //field is value
-            writeValueIntoField(field, instance, (findElementOfType(field.type, library).first() as DynamicElement).createObject(library))
+            val content = findElementOfType(field.type, library).firstOrNull() ?: return
+            writeValueIntoField(field, instance, (content as DynamicElement).createObject(library))
         }
     }
 
@@ -263,7 +264,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         content?.elements?.forEach { element ->
             try {
                 val tagClass = findClassFromElementName(element.tagName, library)
-                if(clazz == tagClass || clazz.javaClass.isAssignableFrom(tagClass.javaClass))
+                if(clazz == tagClass || clazz.isAssignableFrom(tagClass.javaClass))
                     elements.add(element)
             }catch (e: Exception) {
 

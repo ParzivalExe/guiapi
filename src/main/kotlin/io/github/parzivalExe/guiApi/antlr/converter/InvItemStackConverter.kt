@@ -47,7 +47,7 @@ class InvItemStackConverter : Converter {
             string =="LEGGINGS" -> -3
             string == "BOOTS" -> -4
             Regex("LOW\\d+").matches(string) -> Regex("LOW").replace(string, "").toInt()
-            Regex("UP\\d+").matches(string) -> Regex("UP").replace(string, "").toInt() + InvItemStack.UP_OFFSET
+            Regex("UP\\d+").matches(string) -> Regex("UP").replace(string, "").toInt() + InvItemStack.POSITION_UP_OFFSET
             else -> string.toInt() + 9
         }
 

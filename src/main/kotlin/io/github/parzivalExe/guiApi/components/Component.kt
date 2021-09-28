@@ -57,6 +57,10 @@ abstract class Component(componentMeta: ComponentMeta) {
 
     fun addClickListener(clickListener: ComponentClickAction) = clickActions.add(clickListener)
 
+    fun removeClickListener(clickListener: ComponentClickAction): Boolean = clickActions.remove(clickListener)
+
+    fun hasRegisteredClickListener(clickListener: ComponentClickAction): Boolean = clickActions.contains(clickListener)
+
     //endregion
 
     //region AbstractMethods

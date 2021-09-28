@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Gui title="InProject Gui">
+    <Library>
+        <Include synonym="StaticComponent" path="io.github.parzivalExe.guiApi.components.StaticComponent"/>
+    </Library>
+    <StaticComponent title="Yes, this is internal" look="1"/>
+</Gui>

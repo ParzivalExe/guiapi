@@ -20,15 +20,19 @@ class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
         const val POSITION_LOW_6 = 6
         const val POSITION_LOW_7 = 7
         const val POSITION_LOW_8 = 8
-        const val UP_OFFSET = 9
+        const val POSITION_UP_OFFSET = 9
     }
 
 
-    constructor(type: Material, amount: Int, damage: Short, data: Byte, invPosition: Int)
-            : this(ItemStack(type, amount, damage, data), invPosition)
+    constructor(type: Material, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
+            : this(ItemStack(type, amount, 0, data).apply {
+                    durability = itemDurability
+              }, invPosition)
 
-    constructor(type: Int, amount: Int, damage: Short, data: Byte, invPosition: Int)
-            : this(ItemStack(type, amount, damage, data), invPosition)
+    constructor(type: Int, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
+            : this(ItemStack(type, amount, 0, data).apply {
+                    durability = itemDurability
+              }, invPosition)
 
     constructor(type: Int, invPosition: Int)
             : this(type, 1, invPosition)
