@@ -14,7 +14,8 @@ import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
 
 @Suppress("unused")
-open class AdditionalOptionsComponent(@XMLContent(necessary = true) val additionalComponents: ArrayList<Component>, meta: ComponentMeta) : Component(meta) {
+open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent(necessary = true) val additionalComponents: ArrayList<Component>)
+    : Component(meta) {
 
     @XMLAttribute
     var newInvTitle = "?"
@@ -25,8 +26,8 @@ open class AdditionalOptionsComponent(@XMLContent(necessary = true) val addition
     protected var isOpened = false
 
 
-    constructor() : this(arrayListOf<Component>(), ComponentMeta("", ItemStack(Material.WOOL)))
-    constructor(meta: ComponentMeta) : this(arrayListOf(), meta)
+    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    constructor(meta: ComponentMeta) : this(meta, arrayListOf())
 
 
     override fun finalizeComponent() {

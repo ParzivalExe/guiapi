@@ -28,24 +28,14 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
     var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
 
-    /*val yesOption get() = StaticComponent(yesMeta.apply {
-        savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew
-        clickAction = this@YesNoOptionNew
-        place = 3
-    })*/
-
     var yesOption: StaticComponent? = null
+        private set;
 
     @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = ItemStackConverter::class)])
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
 
-    /*val noOption get() = StaticComponent(noMeta.apply {
-        savedObjects[YesNoOption.YES_NO_OPTION_KEY] = this@YesNoOptionNew
-        clickAction = this@YesNoOptionNew
-        place = 5
-    })*/
-
     var noOption: StaticComponent? = null
+        private set;
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if(isOpened) {

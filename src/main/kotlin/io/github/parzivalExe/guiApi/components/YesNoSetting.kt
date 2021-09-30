@@ -35,8 +35,14 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
     var noSettingMeta = ComponentMeta("no", ItemStack(351, 1, 0, 8))
         private set
 
+    var description: ArrayList<String>
+        get() = yesSettingMeta.description
+        set(value) {
+            yesSettingMeta.description = value
+            noSettingMeta.description = value
+        }
 
-    internal constructor(): this(ComponentMeta("YES", ItemStack(351, 1, 0, 10)), ComponentMeta("no", ItemStack(351, 1, 0, 8)))
+    constructor(): this(ComponentMeta("YES", ItemStack(351, 1, 0, 10)), ComponentMeta("no", ItemStack(351, 1, 0, 8)))
 
     init {
         yesSettingMeta = yesMeta

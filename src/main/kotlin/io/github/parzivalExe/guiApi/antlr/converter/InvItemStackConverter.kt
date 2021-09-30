@@ -14,7 +14,7 @@ class InvItemStackConverter : Converter {
         var amount = 1
         var damage: Short = 0
         var data: Byte = 0
-        var position = 0
+        var position = InvItemStack.NO_POSITION
         if(string.contains(Regex("="))) {
             position = changeStringToPosition(string.split("=")[0])
             string = string.split("=")[1]

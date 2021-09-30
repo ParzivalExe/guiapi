@@ -29,6 +29,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     companion object {
         const val MAX_GUI_SIZE = 54
+        const val NO_FORCE_SIZE = -1
 
         private const val FILL_ITEM = "fillItem"
         const val SAVE_KEY_OPEN_CLASS = "openClass"
@@ -51,34 +52,6 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             }
             return createGuiFromCharStream(charStream)
         }
-        /*@JvmStatic
-        fun createGuiFromFile(path: String): Gui = createGuiFromFile(path, "mgui")
-        @JvmStatic
-        fun createGuiFromFile(path: String, fileType: String): Gui = createGuiFromCharStream(CharStreams.fromFileName("$path.$fileType"))
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromInputStream(inputStream: InputStream): Gui = createGuiFromCharStream(CharStreams.fromStream(inputStream))
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromFile(file: File): Gui = createGuiFromCharStream(CharStreams.fromStream(file.inputStream()))
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromProjectFile(projectPath: String): Gui? =
-            createGuiFromProjectFile(projectPath, Class.forName(Thread.currentThread().stackTrace[3].className))
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromProjectFile(projectPath: String, originClass: Class<*>): Gui? = createGuiFromProjectFile("", projectPath, "mgui", originClass)
-        @JvmStatic
-        fun createGuiFromProjectFile(projectPath: String, fileType: String, originClass: Class<*>): Gui? = createGuiFromProjectFile("", projectPath, fileType, originClass)
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromProjectFile(path: String, fileName: String, fileType: String): Gui? = createGuiFromProjectFile(path, fileName, fileType, Class.forName(Thread.currentThread().stackTrace[2].className))
-        @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromProjectFile(path: String, fileName: String, fileType: String, clazz: Class<*>): Gui? {
-            val inputStream = clazz.getResourceAsStream("$path/$fileName.$fileType") ?: return null
-            return createGuiFromInputStream(inputStream)
-        }*/
 
         private fun createGuiFromCharStream(charStream: CharStream): Gui {
             val lexer = XMLLexer(charStream)
@@ -104,16 +77,19 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
     constructor() : this("NoTitleSet")
 
     var id: Int = GuiManager.initializeGui(this)
+        private set;
     @XMLAttribute
-    var forcedSize = -1
+    var forcedSize = NO_FORCE_SIZE
     @XMLAttribute
     var fillEmptyPlaces = true
     @Suppress("DEPRECATION")
-    @XMLAttribute(defaultValue = "160:7", converter = ItemStackConverter::class)
+    @XMLAttribute(converter = ItemStackConverter::class)
     var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
 
     var inventory: Inventory? = null
+        private set;
     var openedPlayer: Player? = null
+        private set;
 
     private val savedObjects = hashMapOf<String, Any?>()
 

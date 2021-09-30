@@ -16,4 +16,21 @@ class SettingOption(@XMLConstructor([
     @Suppress("unused")
     internal constructor(): this(ComponentMeta("", ItemStack(Material.BARRIER)))
 
+    constructor(title: String, look: ItemStack): this(ComponentMeta(title, look))
+    constructor(title: String, look: ItemStack, description: ArrayList<String>): this(ComponentMeta(title, look, description))
+
+    var title: String
+        get() = meta.title
+        set(value) {
+            meta.title = value
+        }
+    var look: ItemStack
+        get() = meta.buildItem()
+        set(value) = meta.setLook(value)
+    var description: ArrayList<String>
+        get() = meta.description
+        set(value) {
+            meta.description = value
+        }
+
 }
