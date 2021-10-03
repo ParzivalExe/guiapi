@@ -14,7 +14,8 @@ class InvItemStackConverter : Converter {
         //[1x]type[\[damage\]]
         var amount = 1
         var damage: Short = 0
-        var position = 0
+        var position = InvItemStack.NO_POSITION
+
         if(string.contains(Regex("="))) {
             position = changeStringToPosition(string.split("=")[0])
             string = string.split("=")[1]
@@ -43,7 +44,7 @@ class InvItemStackConverter : Converter {
             string =="LEGGINGS" -> -3
             string == "BOOTS" -> -4
             Regex("LOW\\d+").matches(string) -> Regex("LOW").replace(string, "").toInt()
-            Regex("UP\\d+").matches(string) -> Regex("UP").replace(string, "").toInt() + InvItemStack.UP_OFFSET
+            Regex("UP\\d+").matches(string) -> Regex("UP").replace(string, "").toInt() + InvItemStack.POSITION_UP_OFFSET
             else -> string.toInt() + 9
         }
 

@@ -1,6 +1,7 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
+import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.events.EventComponentClickedEvent
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -23,12 +24,17 @@ import org.bukkit.inventory.ItemStack
  */
 class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
 
+    @XMLAttribute
+    var closeGui = true
+
 
     @Suppress("unused")
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         Bukkit.getPluginManager().callEvent(EventComponentClickedEvent(this, whoClicked, gui, action, slot, clickType))
+        if(closeGui)
+            gui.closeGui()
     }
 
 }

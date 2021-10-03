@@ -22,7 +22,8 @@ class GuiElement(tagName: String) : DynamicElement(tagName) {
             if(componentElement is DynamicElement) {
                 val clazz = componentElement.getCreateObjectClass(library)
                 if(clazz != null && Component::class.java.isAssignableFrom(clazz)) {
-                    components.add(componentElement.createObject(library) as Component)
+                    val component = (componentElement.createObject(library) ?: return@forEach) as Component
+                    components.add(component)
                 }
             }
         }

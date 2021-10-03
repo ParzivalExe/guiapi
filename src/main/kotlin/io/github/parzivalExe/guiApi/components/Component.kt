@@ -23,7 +23,8 @@ abstract class Component(componentMeta: ComponentMeta) {
 
     var id: Int = ComponentManager.getNewComponentId()
         private set
-    var clickAction: ComponentClickAction? = null
+    var clickActions = arrayListOf<ComponentClickAction>()
+        private set
 
     @XMLAttribute
     var place = -1
@@ -49,10 +50,17 @@ abstract class Component(componentMeta: ComponentMeta) {
     //region ClickAction
 
     open fun startClickAction(whoClicked: Player, gui: Gui, action: InventoryAction, clickType: ClickType): Boolean {
-        if(clickAction == null)
-            return false
-        return clickAction!!.onClick(this, whoClicked, gui, action, clickType)
+        var handled = false
+        clickActions.forEach { if(it.onClick(this, whoClicked, gui, action, clickType)) handled = true }
+        return handled
     }
+
+    fun addClickListener(clickListener: ComponentClickAction) = clickActions.add(clickListener)
+
+    fun removeClickListener(clickListener: ComponentClickAction): Boolean = clickActions.remove(clickListener)
+
+    fun hasRegisteredClickListener(clickListener: ComponentClickAction): Boolean = clickActions.contains(clickListener)
+
 
     //endregion
 

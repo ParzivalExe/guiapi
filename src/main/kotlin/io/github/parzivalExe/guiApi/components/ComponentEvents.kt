@@ -1,6 +1,8 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.GuiManager
+import io.github.parzivalExe.guiApi.events.ComponentClickedEvent
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -17,6 +19,8 @@ class ComponentEvents : Listener{
 
                 component.componentClicked(event.whoClicked, gui, event.action, event.slot, event.click)
                 component.startClickAction(event.whoClicked as Player, gui, event.action, event.click)
+
+                Bukkit.getPluginManager().callEvent(ComponentClickedEvent(component, event.whoClicked as Player, gui, event.action, event.slot, event.click))
 
                 event.isCancelled = true
             }

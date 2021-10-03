@@ -8,6 +8,9 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.components.Component
 import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.FreeSpaceComponent
+import io.github.parzivalExe.guiApi.events.GuiCloseEvent
+import io.github.parzivalExe.guiApi.events.GuiOpenEvent
+import io.github.parzivalExe.guiApi.events.GuiRefreshEvent
 import io.github.parzivalExe.guiApi.exceptions.GuiCreateException
 import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
@@ -21,21 +24,36 @@ import java.io.File
 import java.io.InputStream
 
 @Suppress("MemberVisibilityCanBePrivate")
-class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title: String) {
+class Gui(@XMLAttribute(necessary = true) val title: String) {
 
     companion object {
         const val MAX_GUI_SIZE = 54
+        const val NO_FORCE_SIZE = -1
 
         private const val FILL_ITEM = "fillItem"
+        const val SAVE_KEY_OPEN_CLASS = "openClass"
 
         @JvmStatic
-        fun createGuiFromFile(path: String): Gui = createGuiFromCharStream(CharStreams.fromFileName(path))
+        fun createGui(externalGui: ExternalGui) = externalGui.getGui()
         @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromInputStream(inputStream: InputStream): Gui = createGuiFromCharStream(CharStreams.fromStream(inputStream))
+        fun createGui(path: String, pathOrigin: PathOrigin): Gui = createGui(path, "mgui", pathOrigin)
         @JvmStatic
-        @Suppress("unused")
-        fun createGuiFromFile(file: File): Gui = createGuiFromCharStream(CharStreams.fromStream(file.inputStream()))
+        fun createGui(path: String, fileType: String, pathOrigin: PathOrigin): Gui {
+            val clazz = Class.forName(Thread.currentThread().stackTrace[3].className)
+            return createGui(path, fileType, pathOrigin, clazz)
+        }
+        @JvmStatic
+        internal fun createGui(path: String, fileType: String, pathOrigin: PathOrigin, creationClass: Class<*>): Gui {
+            val charStream = when(pathOrigin) {
+                PathOrigin.PC_ORIGIN -> CharStreams.fromFileName("/$path.$fileType")
+                PathOrigin.SERVER_ORIGIN -> CharStreams.fromFileName("$path.$fileType")
+                PathOrigin.PROJECT_ORIGIN -> {
+                    val inputStream = creationClass.getResourceAsStream("/$path.$fileType")
+                    CharStreams.fromStream(inputStream)
+                }
+            }
+            return createGuiFromCharStream(charStream)
+        }
 
         private fun createGuiFromCharStream(charStream: CharStream): Gui {
             val lexer = XMLLexer(charStream)
@@ -47,21 +65,36 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             val visitor = Visitor(documentContext)
             return visitor.buildGui()
         }
+
+        @JvmStatic
+        fun closeGui(player: Player) {
+            if(!GuiManager.isInventoryGui(player.openInventory.topInventory))
+                return
+            val gui = GuiManager.getGuiFromInventory(player.openInventory.topInventory) ?: return
+            gui.closeGui()
+        }
+
     }
 
     constructor() : this("NoTitleSet")
 
     var id: Int = GuiManager.initializeGui(this)
+        private set
+
     @XMLAttribute
-    var forcedSize = -1
+    var forcedSize = NO_FORCE_SIZE
     @XMLAttribute
     var fillEmptyPlaces = true
     @Suppress("DEPRECATION")
     @XMLAttribute(converter = ItemStackConverter::class)
-    var fillItem = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+    var fillItem = ItemStack(Material.GRAY_STAINED_GLASS_PANE)
 
     var inventory: Inventory? = null
+        private set
     var openedPlayer: Player? = null
+        private set
+
+    private val savedObjects = hashMapOf<String, Any?>()
 
     private val registeredComponents = hashMapOf<Component, Int>()
 
@@ -90,6 +123,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return position
     }
 
+    @Suppress("unused")
     fun removeComponents(startPosition: Int, endPosition: Int) = removeRegisteredComponents(startPosition, endPosition)
     @Suppress("unused")
     fun removeComponent(position: Int) = removeRegisteredComponentAtPosition(position)
@@ -102,6 +136,13 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     @Suppress("unused")
     fun changeOutComponent(oldComponent: Component, newComponent: Component) = changeOutRegisteredComponent(oldComponent, newComponent)
+
+    @Suppress("unused")
+    fun getComponentAtPosition(place: Int) : Component? = getRegisteredComponentAtPosition(place)
+
+    @Suppress("unused")
+    fun getAllComponents(): Array<Component> = registeredComponents.keys.toTypedArray()
+
 
     //endregion
 
@@ -209,11 +250,6 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return -1
     }
 
-    private fun clearRegisteredComponents() {
-        registeredComponents.keys.forEach { it.finalizeComponent() }
-        registeredComponents.clear()
-    }
-
     fun positionOffsetFromPosition(startPosition: Int, offset: Int) {
         @Suppress("UNCHECKED_CAST")
         (registeredComponents.clone() as HashMap<Component, Int>).forEach { (component, place) ->
@@ -242,11 +278,6 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
         return -1
     }
 
-    private fun clearFillers() {
-        registeredFillers.keys.forEach { it.finalizeComponent() }
-        registeredFillers.clear()
-    }
-
     //endregion
 
     //endregion
@@ -255,10 +286,27 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
 
     //region Create/Refresh Gui
 
+    @Suppress("unused")
     fun openGui(player: Player) {
-        openedPlayer = player
-        refreshInventory()
+        val openClass = Class.forName(Thread.currentThread().stackTrace[2].className)
+        openGui(player, openClass)
     }
+
+    fun openGui(player: Player, guiBefore: Gui) {
+        val openClass = guiBefore.savedObjects[SAVE_KEY_OPEN_CLASS]
+        if(openClass == null)
+            openGui(player)
+        else
+            openGui(player, openClass as Class<*>)
+    }
+
+    fun openGui(player: Player, openClass: Class<*>) {
+        openedPlayer = player
+        saveObject(SAVE_KEY_OPEN_CLASS, openClass)
+        refreshInventory()
+        Bukkit.getPluginManager().callEvent(GuiOpenEvent(this, player))
+    }
+
 
     fun refreshInventory() {
         if(openedPlayer == null)
@@ -291,7 +339,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             openedPlayer?.openInventory(inventory!!)
         else
             openedPlayer?.updateInventory()
-
+        Bukkit.getPluginManager().callEvent(GuiRefreshEvent(this, openedPlayer))
     }
 
     fun getSlotCount(): Int {
@@ -344,7 +392,11 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
                         savedObjects[FILL_ITEM] = true
                     })] = i
                 }else if(getRegisteredComponentAtPosition(i) is FreeSpaceComponent) {
-                    registeredComponents.filterValues { it == i }.keys.firstOrNull()?.meta = ComponentMeta(" ", ItemStack(fillItem))
+                    val freeSpace = getRegisteredComponentAtPosition(i) as FreeSpaceComponent
+                    if(!freeSpace.forceNoFill) {
+                        registeredComponents.filterValues { it == i }.keys.firstOrNull()?.meta =
+                            ComponentMeta(" ", ItemStack(fillItem))
+                    }
                 }else if(registeredComponents.containsValue(i) && registeredFillers.containsValue(i)) {
                     val filler = getRegisteredFillerAtPosition(i) ?: continue
                     filler.finalizeComponent()
@@ -375,9 +427,23 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             filler.finalizeComponent()
         }
         GuiManager.finalizeGui(this)
+        Bukkit.getPluginManager().callEvent(GuiCloseEvent(this, openedPlayer))
     }
 
     //endregion
+
+    //region SavedObjects Functions
+
+    fun saveObject(key: String, value: Any?) {
+        savedObjects[key] = value
+    }
+    fun getObject(key: String): Any? =
+        savedObjects.getOrDefault(key, null)
+    fun hasObjectSaved(key: String): Boolean =
+        savedObjects.containsKey(key)
+
+    //endregion
+
 
 
     override fun equals(other: Any?): Boolean {

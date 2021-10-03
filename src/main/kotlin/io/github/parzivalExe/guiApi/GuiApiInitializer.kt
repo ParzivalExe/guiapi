@@ -6,6 +6,9 @@ import io.github.parzivalExe.guiApi.commands.GuiXMLCommand
 import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
 import org.bukkit.plugin.java.JavaPlugin
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.notExists
 
 class GuiApiInitializer : JavaPlugin() {
 
@@ -31,6 +34,14 @@ class GuiApiInitializer : JavaPlugin() {
 
 
         println("$PREFIX The GuiAPI has been disabled!")
+    }
+
+    private fun createGuiDebugFolder() {
+        val path = Path("plugins/GuiAPI/Guis")
+        if(path.notExists()) {
+            path.createDirectories()
+            println("$PREFIX Directory \'plugins/GuiAPI/Guis\' for XML-Debugging created")
+        }
     }
 
 

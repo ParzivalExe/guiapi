@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class GuiTestCommand : CommandExecutor{
+class GuiTestCommand : CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
@@ -36,7 +36,7 @@ class GuiTestCommand : CommandExecutor{
             val staticComponent2 = StaticComponent(ComponentMeta("TestStatic2", ItemStack(Material.GOLDEN_APPLE)))
             gui.addComponent(staticComponent)
             gui.addComponent(staticComponent2)
-            gui.setComponent(Folder(gui2, ComponentMeta("TestFolder", ItemStack(Material.CHEST))), 4)
+            gui.setComponent(Folder(ComponentMeta("TestFolder", ItemStack(Material.CHEST)), gui2), 4)
             gui.openGui(sender)
         }
 

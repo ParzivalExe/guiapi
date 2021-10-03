@@ -6,8 +6,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
-class GetAmountCommand : CommandExecutor {
-
+class GetAmountCommand : CommandExecutor{
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         when (command.name) {
