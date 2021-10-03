@@ -6,6 +6,11 @@ import io.github.parzivalExe.guiApi.commands.GuiXMLCommand
 import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import kotlin.io.path.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createDirectory
+import kotlin.io.path.notExists
 
 class GuiApiInitializer : JavaPlugin() {
 
@@ -18,6 +23,7 @@ class GuiApiInitializer : JavaPlugin() {
     override fun onEnable() {
         println("$PREFIX The GuiAPI is being initialized...")
 
+        createGuiDebugFolder()
         registerConfig()
         registerEvents()
         registerCommands()
@@ -34,6 +40,13 @@ class GuiApiInitializer : JavaPlugin() {
     }
 
 
+    private fun createGuiDebugFolder() {
+        val path = Path("plugins/GuiAPI/Guis")
+        if(path.notExists()) {
+            path.createDirectories()
+            println("$PREFIX Directory \'plugins/GuiAPI/Guis\' for XML-Debugging created")
+        }
+    }
     private fun registerEvents() {
         println("$PREFIX   All Events are being registered...")
 

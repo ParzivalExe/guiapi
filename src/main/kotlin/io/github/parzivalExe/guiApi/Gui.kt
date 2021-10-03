@@ -25,7 +25,7 @@ import java.io.InputStream
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
-class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title: String) {
+class Gui(@XMLAttribute(necessary = true) val title: String) {
 
     companion object {
         const val MAX_GUI_SIZE = 54
@@ -61,6 +61,7 @@ class Gui(@XMLAttribute(necessary = true, defaultValue = "NoTitleSet") val title
             val documentContext = parser.document()
 
             val visitor = Visitor(documentContext)
+
             return visitor.buildGui()
         }
 
