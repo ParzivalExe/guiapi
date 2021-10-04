@@ -373,7 +373,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
 
 
     private fun getHighestPos(): Int {
-        val highestPos = registeredComponents.values.maxOf { it }
+        val highestPos = registeredComponents.values.maxOfOrNull { it } ?: 0
         return if(highestPos <= MAX_GUI_SIZE) highestPos else MAX_GUI_SIZE
     }
 
