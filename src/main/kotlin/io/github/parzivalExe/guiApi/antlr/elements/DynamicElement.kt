@@ -1,5 +1,6 @@
 package io.github.parzivalExe.guiApi.antlr.elements
 
+import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.GuiApiInitializer
 import io.github.parzivalExe.guiApi.antlr.JavaHelper
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
@@ -7,6 +8,8 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.antlr.converter.Converter
 import io.github.parzivalExe.guiApi.antlr.exceptions.XMLAttributeException
+import io.github.parzivalExe.guiApi.antlr.interfaces.NoForceEndType
+import io.github.parzivalExe.guiApi.components.Component
 import java.lang.IllegalArgumentException
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
@@ -28,6 +31,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
     open fun createObject(library: Library): Any? {
         var className = ""
+        var instance: Any? = null
         try {
             //get clazz
             val clazz = findClassFromElementName(tagName, library)
@@ -43,7 +47,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             }
 
             //callMethod
-            val instance = clazz.getConstructor().newInstance()
+            instance = clazz.getConstructor().newInstance()
 
             populateFields(fields, instance, library)
 
@@ -65,6 +69,13 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             println("${GuiApiInitializer.C_PREFIX} {WARNING} There has been a problem with the Attributes of a Tag for the component \'$className\'. The XMLAttributeException: ${e.message}. BECAUSE OF THIS, THIS TAG WILL BE IGNORED!")
         }catch (e: Exception) {
             println("${GuiApiInitializer.C_PREFIX} {WARNING} There has been an unknown Exception with creating the component \'$className\' from XML. The exception thrown is: ${e.message}. BECAUSE OF THIS, THIS TAG WILL BE IGNORED!")
+        }
+        if(instance != null) {
+            if (Component::class.java.isAssignableFrom(instance::class.java)) {
+                    (instance as Component).finalizeComponent()
+            }else if(Gui::class.java.isAssignableFrom(instance::class.java)) {
+                    (instance as Gui).finalizeGui()
+            }
         }
         return null
     }
@@ -94,7 +105,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             if (xmlName.isEmpty())
                 xmlName = field.name
 
-            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, annotation.necessary, field.type) ?: return
+
+            val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, annotation.necessary, getEndType(field, annotation.forceEndType)) ?: return
 
             try {
                 writeValueIntoField(field, instance, value)
@@ -107,10 +119,13 @@ open class DynamicElement(tagName: String) : Element(tagName) {
     }
 
     private fun populateFieldWithContent(field: Field, instance: Any, library: Library) {
+        val annotation = field.getAnnotation(XMLContent::class.java)
         if(field.type.isArray && !List::class.java.isAssignableFrom(field.type) && field.genericType !is ParameterizedType) {
             //field is Array
             try {
                 val elements = findElementOfType(field.type.componentType, library)
+                if(elements.size == 0 && annotation.necessary)
+                    throw XMLAttributeException("At least one Element of type ${field.type.componentType.canonicalName} is not given although it is necessary for this Component")
                 writeValueIntoField(
                     field,
                     instance,
@@ -121,11 +136,19 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             }
         }else if(!field.type.isArray && List::class.java.isAssignableFrom(field.type) && field.genericType is ParameterizedType) {
             //field is List
-            val elements = findElementOfType((field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>, library)
+            val innerType = (field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>
+            val elements = findElementOfType(innerType, library)
+            if(elements.size == 0 && annotation.necessary)
+                throw XMLAttributeException("At least one Element of type ${innerType.canonicalName} is not given although it is necessary for this Component")
             writeValueIntoField(field, instance, elements.map { element -> (element as DynamicElement).createObject(library) })
         }else{
             //field is value
-            writeValueIntoField(field, instance, (findElementOfType(field.type, library).first() as DynamicElement).createObject(library))
+            val content = findElementOfType(field.type, library).firstOrNull() ?:
+                if(annotation.necessary)
+                    throw XMLAttributeException("The Element of type ${field.type.canonicalName} must be given as Content for this Component")
+                else
+                    return
+            writeValueIntoField(field, instance, (content as DynamicElement).createObject(library))
         }
     }
 
@@ -134,7 +157,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             val valueArray = arrayListOf<Any>()
             val annotation = field.getAnnotation(XMLConstructor::class.java)
             for (xmlAttribute in annotation.constructorAttributes) {
-                val value = readAttribute(xmlAttribute.attrName, xmlAttribute.defaultValue, xmlAttribute.converter, xmlAttribute.necessary, String::class.java)
+                val finalType = if(xmlAttribute.forceEndType != NoForceEndType::class) xmlAttribute.forceEndType.java else String::class.java
+                val value = readAttribute(xmlAttribute.attrName, xmlAttribute.defaultValue, xmlAttribute.converter, xmlAttribute.necessary, finalType)
                     ?: continue
 
                 valueArray.add(value)
@@ -162,8 +186,8 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
         val isArray = valueStringIsArray(attrValueString)
         for(valueString in valueStringToList(attrValueString)) {
-            val value =
-                converter.java.newInstance().attributeStringToValue(valueString.replace("\\,", ","), null) ?: continue
+            @Suppress("DEPRECATION")
+            val value = converter.java.newInstance().attributeStringToValue(valueString.replace("\\,", ","), null) ?: continue
 
             if (value !is String) {
                 valueList.add(value)
@@ -187,6 +211,16 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             valueList
         else
             valueList.firstOrNull()
+    }
+
+    private fun getEndType(field: Field, forceEndType: KClass<*>): Class<*> {
+        if(forceEndType != NoForceEndType::class)
+            return forceEndType.java
+        if(field.type.isArray && !List::class.java.isAssignableFrom(field.type) && field.genericType !is ParameterizedType)
+            return field.type.componentType
+        else if(!field.type.isArray && List::class.java.isAssignableFrom(field.type) && field.genericType is ParameterizedType)
+            return (field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>
+        return field.type
     }
 
     private fun valueStringToList(valueString: String): Array<String> =
@@ -246,24 +280,12 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         }
     }
 
-
-    /*private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
-        val elements = arrayListOf<Element>()
-        val synonym = library.getSynonymForClass(clazz)
-        content?.elements?.forEach { element ->
-            if(element.tagName == synonym || element.tagName == clazz.canonicalName) {
-                elements.add(element)
-            }
-        }
-        return elements
-    }*/
-
     private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
         val elements = arrayListOf<Element>()
         content?.elements?.forEach { element ->
             try {
                 val tagClass = findClassFromElementName(element.tagName, library)
-                if(clazz == tagClass || clazz.javaClass.isAssignableFrom(tagClass.javaClass))
+                if(clazz == tagClass || clazz.isAssignableFrom(tagClass))
                     elements.add(element)
             }catch (e: Exception) {
 

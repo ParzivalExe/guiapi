@@ -24,12 +24,6 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
     )
 
     private var activatedOption = 0
-        /*set(value) {
-            field = value
-            meta = options[value].meta.apply {
-                description = this@Settings.meta.description
-            }
-        }*/
 
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -58,7 +52,6 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
             else
                 activatedOption++
 
-            //meta = options[activatedOption].meta
             gui.refreshInventory()
 
             Bukkit.getPluginManager().callEvent(SettingsClickedEvent(this, options[clickedOption], options[activatedOption], whoClicked, gui, action, slot, clickType))
