@@ -1,4 +1,4 @@
-// Generated from D:/Users/Lasse/IdeaProjects/GuiAPI/src/main/antlr4\XMLParser.g4 by ANTLR 4.9.1
+// Generated from /Users/lasse/IdeaProjects/guiapi/src/main/antlr4/XMLParser.g4 by ANTLR 4.9.1
 package io.github.parzivalExe.guiApi.antlr.grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

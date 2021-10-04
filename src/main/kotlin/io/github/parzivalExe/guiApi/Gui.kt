@@ -346,23 +346,13 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
         if(sizeIsForced()) {
             return forcedSize
         }
-        when (getHighestPos()) {
-            in 0..8 ->
-                return 9
-            in 9..17 ->
-                return 18
-            in 18..26 ->
-                return 27
-            in 27..35 ->
-                return 36
-            in 36..44 ->
-                return 45
-            in 45..53 ->
-                return 54
-            else -> {
-                Bukkit.getServer().logger.severe("There are problems with the size of Gui $title. You can't set the GUIs size to ${getHighestPos()}. The Size of a gui must be between 1 - 54")
-                throw GuiCreateException()
-            }
+        return when (getHighestPos()) {
+            in 0..8 -> 9
+            in 9..17 -> 18
+            in 18..26 -> 27
+            in 27..35 -> 36
+            in 36..44 -> 45
+            else -> 54
         }
     }
 
