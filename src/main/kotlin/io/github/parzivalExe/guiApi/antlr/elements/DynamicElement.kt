@@ -1,5 +1,6 @@
 package io.github.parzivalExe.guiApi.antlr.elements
 
+import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.GuiApiInitializer
 import io.github.parzivalExe.guiApi.antlr.JavaHelper
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
@@ -8,6 +9,7 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.antlr.converter.Converter
 import io.github.parzivalExe.guiApi.antlr.exceptions.XMLAttributeException
 import io.github.parzivalExe.guiApi.antlr.interfaces.NoForceEndType
+import io.github.parzivalExe.guiApi.components.Component
 import java.lang.IllegalArgumentException
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
@@ -29,6 +31,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
 
     open fun createObject(library: Library): Any? {
         var className = ""
+        var instance: Any? = null
         try {
             //get clazz
             val clazz = findClassFromElementName(tagName, library)
@@ -44,7 +47,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             }
 
             //callMethod
-            val instance = clazz.getConstructor().newInstance()
+            instance = clazz.getConstructor().newInstance()
 
             populateFields(fields, instance, library)
 
@@ -67,6 +70,18 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         }catch (e: Exception) {
             println("${GuiApiInitializer.C_PREFIX} {WARNING} There has been an unknown Exception with creating the component \'$className\' from XML. The exception thrown is: ${e.message}. BECAUSE OF THIS, THIS TAG WILL BE IGNORED!")
         }
+        if(instance != null) {
+            try {
+                if (Component::class.java.isAssignableFrom(instance::class.java)) {
+                    (instance as Component).finalizeComponent()
+                }else if(Gui::class.java.isAssignableFrom(instance::class.java)) {
+                    (instance as Gui).finalizeGui()
+                }
+            }catch(e: Exception) {
+
+            }
+        }
+
         return null
     }
 
@@ -272,24 +287,12 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         }
     }
 
-
-    /*private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
-        val elements = arrayListOf<Element>()
-        val synonym = library.getSynonymForClass(clazz)
-        content?.elements?.forEach { element ->
-            if(element.tagName == synonym || element.tagName == clazz.canonicalName) {
-                elements.add(element)
-            }
-        }
-        return elements
-    }*/
-
     private fun findElementOfType(clazz: Class<*>, library: Library): ArrayList<Element> {
         val elements = arrayListOf<Element>()
         content?.elements?.forEach { element ->
             try {
                 val tagClass = findClassFromElementName(element.tagName, library)
-                if(clazz == tagClass || clazz.isAssignableFrom(tagClass.javaClass))
+                if(clazz == tagClass || clazz.isAssignableFrom(tagClass))
                     elements.add(element)
             }catch (e: Exception) {
 
