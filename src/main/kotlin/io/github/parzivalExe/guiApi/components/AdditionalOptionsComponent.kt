@@ -14,8 +14,12 @@ import org.bukkit.inventory.ItemStack
 import kotlin.math.ceil
 
 @Suppress("unused")
-open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent(necessary = true) val additionalComponents: ArrayList<Component>)
+open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent val additionalComponents: ArrayList<Component>)
     : Component(meta) {
+
+    companion object {
+        const val KEY_ORIGINAL_PLACE = "originalPlace"
+    }
 
     @XMLAttribute
     var newInvTitle = "?"
@@ -50,12 +54,15 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent(necessary
     internal fun openUnderInventory(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, clickType: ClickType) {
         val startPosition = (gui.getPositionOfComponent(this) / 9 + 1) * 9
         if(!isOpened) {
-            gui.positionOffsetFromPosition(startPosition, ceil(additionalComponents.count()/9.0).toInt()*9)
+            gui.positionOffsetFromPosition(startPosition, getOffset())
             for ((index, component) in additionalComponents.withIndex()) {
-                if(component.place >= 0)
+                if(component.place >= 0) {
+                    component.meta.savedObjects[KEY_ORIGINAL_PLACE] = component.place
                     component.place = startPosition + component.place
-                else
+                } else {
+                    component.meta.savedObjects[KEY_ORIGINAL_PLACE] = component.place
                     component.place = startPosition + index
+                }
                 gui.addComponent(component)
             }
         }else{
@@ -64,9 +71,10 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent(necessary
                     component.openUnderInventory(whoClicked, gui, action, clickType)
 
                 gui.removeComponent(component)
-                component.place = component.place - startPosition - index
+                component.place = component.meta.savedObjects[KEY_ORIGINAL_PLACE] as Int
+                component.meta.savedObjects.remove(KEY_ORIGINAL_PLACE)
             }
-            gui.positionOffsetFromPosition(startPosition, -ceil(additionalComponents.count()/9.0).toInt()*9)
+            gui.positionOffsetFromPosition(startPosition, -getOffset())
         }
         isOpened = !isOpened
         Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
@@ -81,6 +89,19 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent(necessary
         isOpened = true
         newGui.openGui(gui.openedPlayer!!, gui)
         Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
+    }
+
+    private fun getOffset(): Int {
+        val offset = ceil(additionalComponents.count()/9.0).toInt()*9
+        val maxPlace = additionalComponents.maxOf { component ->
+            if(component.meta.savedObjects.containsKey(KEY_ORIGINAL_PLACE))
+                return@maxOf component.meta.savedObjects[KEY_ORIGINAL_PLACE] as Int
+            else
+                return@maxOf component.place
+        }
+        if(maxPlace >= offset)
+            return ceil((maxPlace+1)/9.0).toInt()*9
+        return offset
     }
 
 

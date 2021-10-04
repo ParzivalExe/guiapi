@@ -4,6 +4,7 @@ import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
+import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.events.NoOptionClickedEvent
 import io.github.parzivalExe.guiApi.events.YesOptionClickedEvent
 import org.bukkit.Bukkit
@@ -20,7 +21,6 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
     companion object {
         @JvmStatic val YES_NO_OPTION_KEY = "yesNoOption"
     }
-
 
     constructor(): this(ComponentMeta("", ItemStack(Material.WOOL)))
 
