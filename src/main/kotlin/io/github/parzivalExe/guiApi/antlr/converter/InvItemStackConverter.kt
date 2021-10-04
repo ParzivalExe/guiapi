@@ -1,6 +1,7 @@
 package io.github.parzivalExe.guiApi.antlr.converter
 
 import io.github.parzivalExe.guiApi.objects.InvItemStack
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class InvItemStackConverter : Converter {
@@ -10,33 +11,15 @@ class InvItemStackConverter : Converter {
             return defaultValue
 
         var string = attrString
-        //[1x]type[:data][\[damage\]]
-        var amount = 1
-        var damage: Short = 0
-        var data: Byte = 0
         var position = InvItemStack.NO_POSITION
         if(string.contains(Regex("="))) {
             position = changeStringToPosition(string.split("=")[0])
             string = string.split("=")[1]
         }
-        if(string.contains(Regex("\\d+x"))) {
-            amount = string.split("x")[0].toInt()
-            string = string.split("x")[1]
-        }
-        if(string.contains(Regex("\\[\\d+]"))) {
-            damage = string.split("[")[1].removeSuffix("]").toShort()
-            string = string.split("[")[0]
-        }
-        if(string.contains(Regex(":\\d+"))) {
-            data = string.split(":")[1].toByte()
-            string = string.split(":")[0]
-        }
-        val type: Int = string.toInt()
+        val item = ItemStackConverter().attributeStringToValue(string, ItemStack(Material.STONE)) as ItemStack
 
         @Suppress("DEPRECATION")
-        return InvItemStack(type, amount, 0, data, position).apply {
-            itemStack.durability = damage
-        }
+        return InvItemStack(item, position)
     }
 
     @Suppress("SpellCheckingInspection")
