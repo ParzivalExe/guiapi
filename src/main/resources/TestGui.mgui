@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Gui title="InProject Gui">
+    <Library>
+        <Include synonym="StaticComponent" path="io.github.parzivalExe.guiApi.components.StaticComponent"/>
+        <Include synonym="AdditionalOptions" path="io.github.parzivalExe.guiApi.components.AdditionalOptionsComponent"/>
+        <Include synonym="EventComponent" path="io.github.parzivalExe.guiApi.components.EventComponent"/>
+        <Include synonym="Folder" path="io.github.parzivalExe.guiApi.components.Folder"/>
+        <Include synonym="FreeSpaceComponent" path="io.github.parzivalExe.guiApi.components.FreeSpaceComponent"/>
+        <Include synonym="GetItemComponent" path="io.github.parzivalExe.guiApi.components.GetItemComponent"/>
+        <Include synonym="MessageComponent" path="io.github.parzivalExe.guiApi.components.MessageComponent"/>
+        <Include synonym="SettingOption" path="io.github.parzivalExe.guiApi.components.SettingOption"/>
+        <Include synonym="Settings" path="io.github.parzivalExe.guiApi.components.Settings"/>
+        <Include synonym="TeleportComponent" path="io.github.parzivalExe.guiApi.components.TeleportComponent"/>
+        <Include synonym="YesNoOption" path="io.github.parzivalExe.guiApi.components.YesNoOption"/>
+        <Include synonym="YesNoSetting" path="io.github.parzivalExe.guiApi.components.YesNoSetting"/>
+        <!--<Include synonym="ExecuteCommandComponent" path="io.github.parzivalExe.guiApi.components.ExecuteCommandComponent"/>
+        <Include synonym="Command" path="io.github.parzivalExe.guiApi.objects.Command"/>-->
+        <Include synonym="Gui" path="io.github.parzivalExe.guiApi.Gui"/>
+    </Library>
+
+    <StaticComponent title="Yes, this is internal" look="STONE" description="[description with \,]"/>
+
+    <AdditionalOptions title="additionalOptions" look="4xCHEST_MINECART">
+        <StaticComponent title="static0" look="STONE"/>
+        <StaticComponent title="static1" look="GRASS"/>
+        <StaticComponent title="static2" look="DIRT"/>
+        <StaticComponent title="static3" look="COBBLESTONE"/>
+        <AdditionalOptions title="more-Options" look="2xCHEST_MINECART" place="8">
+            <StaticComponent title="static0" look="STONE"/>
+            <Folder title="IF THIS WORKS..." look="CHEST" place="9">
+                <Gui title="MOST ADVANCED" forcedSize="45">
+                    <GetItemComponent title="CONGRATULATIONS!" look="64xGOLD_INGOT" items="[64xGOLD_INGOT]" place="22"/>
+                </Gui>
+            </Folder>
+        </AdditionalOptions>
+    </AdditionalOptions>
+
+    <EventComponent title="event" look="COMMAND_BLOCK_MINECART" place="1"/>
+
+    <Folder title="folder" look="CHEST">
+        <Gui title="Treasure-Chest" fillEmptyPlaces="false">
+            <GetItemComponent title="Equipment" look="6xARMOR_STAND" place="4"
+                              items="[HELMET=DIAMOND_HELMET[300], CHESTPLATE=DIAMOND_CHESTPLATE[300], LEGGINGS=DIAMOND_LEGGINGS[300], BOOTS=DIAMOND_BOOTS[300], LOW0=DIAMOND_SWORD, UP0=2xGOLDEN_APPLE]"/>
+        </Gui>
+    </Folder>
+
+    <FreeSpaceComponent place="0"/>
+
+    <MessageComponent title="Hello World!" look="GRASS" message="$4HELLO WORLD!" colorCodeChar="$"/>
+
+    <Settings>
+        <SettingOption title="beginner" look="APPLE" description="[BEGINNER, advanced, professional]"/>
+        <SettingOption title="Advanced" look="2xGOLDEN_APPLE" description="[beginner, ADVANCED, professional]"/>
+        <SettingOption title="PROFESSIONAL" look="3xENCHANTED_GOLDEN_APPLE" description="[beginner, advanced, PROFESSIONAL]"/>
+    </Settings>
+
+    <TeleportComponent title="teleport" look="ENDER_PEARL" location="*=*:*40:*"/>
+
+    <YesNoOption title="Which Pill" look="GREEN_DYE" yesTitle="Red Pill" yesLook="RED_DYE" noTitle="Blue Pill" noLook="BLUE_DYE"/>
+
+    <YesNoSetting title="On or Off" description="[Switch between On or Off]"/>
+
+    <!--<ExecuteCommandComponent title="Debug Setup" look="3x137" description="[Performs:, /gamemode 1, /time set 0, /weather clear]" place="44">
+        <Command command="gamemode" arguments="[1]"/>
+        <Command command="time" arguments="[set, 0]"/>
+        <Command command="weather" arguments="[clear]"/>
+    </ExecuteCommandComponent>-->
+</Gui>
