@@ -26,7 +26,7 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
 
     @Suppress("DEPRECATION")
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
-    var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 0, 5))
+    var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 5))
 
     var yesOption: StaticComponent? = null
         private set;

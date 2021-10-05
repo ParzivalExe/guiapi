@@ -24,7 +24,7 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
         XMLAttribute(attrName = "yesLook", defaultValue = "351:10", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
-    var yesSettingMeta = ComponentMeta("YES", ItemStack(351, 1, 0, 10))
+    var yesSettingMeta = ComponentMeta("YES", ItemStack(351, 1, 10))
         private set
 
     @XMLConstructor([
@@ -32,7 +32,7 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
         XMLAttribute(attrName = "noLook", defaultValue = "351:8", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
-    var noSettingMeta = ComponentMeta("no", ItemStack(351, 1, 0, 8))
+    var noSettingMeta = ComponentMeta("no", ItemStack(351, 1, 8))
         private set
 
     var description: ArrayList<String>
@@ -42,7 +42,7 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
             noSettingMeta.description = value
         }
 
-    constructor(): this(ComponentMeta("YES", ItemStack(351, 1, 0, 10)), ComponentMeta("no", ItemStack(351, 1, 0, 8)))
+    constructor(): this(ComponentMeta("YES", ItemStack(351, 1, 10)), ComponentMeta("no", ItemStack(351, 1, 8)))
 
     init {
         yesSettingMeta = yesMeta
