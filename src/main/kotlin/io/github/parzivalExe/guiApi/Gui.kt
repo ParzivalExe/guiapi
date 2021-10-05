@@ -20,8 +20,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.io.File
-import java.io.InputStream
 import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -85,7 +83,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
     var fillEmptyPlaces = true
     @Suppress("DEPRECATION")
     @XMLAttribute(converter = ItemStackConverter::class)
-    var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)
+    var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 7)
 
     var inventory: Inventory? = null
         private set;

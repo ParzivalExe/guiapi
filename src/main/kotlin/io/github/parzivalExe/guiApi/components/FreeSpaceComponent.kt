@@ -14,7 +14,7 @@ class FreeSpaceComponent(meta: ComponentMeta) : Component(meta) {
     var forceNoFill = false
 
     @Suppress("DEPRECATION", "unused")
-    constructor() : this(ComponentMeta("", ItemStack(Material.STAINED_GLASS_PANE, 1, 0, 7)))
+    constructor() : this(ComponentMeta("", ItemStack(Material.STAINED_GLASS_PANE, 1, 7)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
 

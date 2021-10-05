@@ -26,15 +26,13 @@ class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
     }
 
 
-    constructor(type: Material, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
-            : this(ItemStack(type, amount, 0, data).apply {
-                    durability = itemDurability
+    constructor(material: Material, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
+            : this(ItemStack(material, amount, 0, data).apply {
+                    if(material.maxDurability > 0) durability = itemDurability
               }, invPosition)
 
     constructor(type: Int, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
-            : this(ItemStack(type, amount, 0, data).apply {
-                    durability = itemDurability
-              }, invPosition)
+            : this(Material.getMaterial(type), amount, itemDurability, data, invPosition)
 
     constructor(type: Int, invPosition: Int)
             : this(type, 1, invPosition)

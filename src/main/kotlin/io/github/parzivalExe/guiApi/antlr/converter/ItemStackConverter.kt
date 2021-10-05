@@ -32,7 +32,7 @@ class ItemStackConverter : Converter {
                 Material.getMaterial(string)
         @Suppress("DEPRECATION")
         return ItemStack(material, amount, 0, data).apply {
-            durability = damage
+            if(material.maxDurability > 0) durability = damage
         }
     }
 }

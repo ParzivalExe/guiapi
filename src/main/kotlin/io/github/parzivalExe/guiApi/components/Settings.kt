@@ -1,9 +1,6 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
-import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
-import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
-import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.events.SettingsClickedEvent
 import org.bukkit.Bukkit
@@ -20,7 +17,7 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
     internal constructor() : this(arrayListOf(
         SettingOption(ComponentMeta("beginner", ItemStack(Material.APPLE))),
         SettingOption(ComponentMeta("Advanced", ItemStack(Material.GOLDEN_APPLE))),
-        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.GOLDEN_APPLE, 1, 0, 1))))
+        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.GOLDEN_APPLE, 1, 1))))
     )
 
     private var activatedOption = 0
