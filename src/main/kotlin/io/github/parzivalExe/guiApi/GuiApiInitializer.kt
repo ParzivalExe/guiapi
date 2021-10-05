@@ -1,15 +1,11 @@
 package io.github.parzivalExe.guiApi
 
 import io.github.parzivalExe.guiApi.commands.GetAmountCommand
-import io.github.parzivalExe.guiApi.commands.GuiTestCommand
 import io.github.parzivalExe.guiApi.commands.GuiXMLCommand
-import io.github.parzivalExe.guiApi.commands.ItemEqualsTestCommand
 import io.github.parzivalExe.guiApi.components.ComponentEvents
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
 import kotlin.io.path.Path
 import kotlin.io.path.createDirectories
-import kotlin.io.path.createDirectory
 import kotlin.io.path.notExists
 
 class GuiApiInitializer : JavaPlugin() {
@@ -24,7 +20,6 @@ class GuiApiInitializer : JavaPlugin() {
         println("$PREFIX The GuiAPI is being initialized...")
 
         createGuiDebugFolder()
-        registerConfig()
         registerEvents()
         registerCommands()
 
@@ -57,20 +52,17 @@ class GuiApiInitializer : JavaPlugin() {
     }
 
     private fun registerCommands() {
+        println("$PREFIX   All Commands are being registered...")
+
         val amountCommand = GetAmountCommand()
-        getCommand("itemEqualsTest").executor = ItemEqualsTestCommand()
-        getCommand("guiTest").executor = GuiTestCommand()
         getCommand("guiAmount").executor = amountCommand
         getCommand("componentAmount").executor = amountCommand
         getCommand("componentList").executor = amountCommand
         @Suppress("SpellCheckingInspection")
         getCommand("guixml").executor = GuiXMLCommand()
-    }
 
-    private fun registerConfig() {
-        config.options().copyDefaults(true)
+        println("$PREFIX   Commands have been registered!")
     }
-
 
 
 }
