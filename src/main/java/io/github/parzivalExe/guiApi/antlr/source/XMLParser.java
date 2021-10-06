@@ -1,5 +1,5 @@
-// Generated from D:/Users/Lasse/IdeaProjects/GuiAPI/src/main/antlr4\XMLParser.g4 by ANTLR 4.9.1
-package io.github.parzivalExe.guiApi.antlr.grammar;
+// Generated from /Users/lasse/IdeaProjects/guiapi/src/main/antlr4/XMLParser.g4 by ANTLR 4.9.1
+package io.github.parzivalExe.guiApi.antlr.source;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
