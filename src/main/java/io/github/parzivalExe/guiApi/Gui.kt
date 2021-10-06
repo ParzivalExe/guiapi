@@ -2,9 +2,9 @@ package io.github.parzivalExe.guiApi
 
 import io.github.parzivalExe.guiApi.antlr.Visitor
 import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLLexer
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
+import io.github.parzivalExe.guiApi.antlr.source.XMLLexer
+import io.github.parzivalExe.guiApi.antlr.source.XMLParser
 import io.github.parzivalExe.guiApi.components.Component
 import io.github.parzivalExe.guiApi.components.ComponentMeta
 import io.github.parzivalExe.guiApi.components.FreeSpaceComponent

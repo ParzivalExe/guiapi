@@ -2,8 +2,8 @@ package io.github.parzivalExe.guiApi.antlr
 
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.elements.*
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLParser
-import io.github.parzivalExe.guiApi.antlr.grammar.XMLParserBaseVisitor
+import io.github.parzivalExe.guiApi.antlr.source.XMLParser
+import io.github.parzivalExe.guiApi.antlr.source.XMLParserBaseVisitor
 
 class Visitor(private val documentContext: XMLParser.DocumentContext) : XMLParserBaseVisitor<IXMLRule>() {
 

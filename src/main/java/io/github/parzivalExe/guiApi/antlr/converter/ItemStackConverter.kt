@@ -25,6 +25,7 @@ class ItemStackConverter : Converter {
             data = string.split(":")[1].toByte()
             string = string.split(":")[0]
         }
+        @Suppress("DEPRECATION")
         val material =
             if(string.matches(Regex("\\d*")))
                 Material.getMaterial(string.toInt())
