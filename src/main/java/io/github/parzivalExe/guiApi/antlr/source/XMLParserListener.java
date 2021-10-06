@@ -1,5 +1,5 @@
 // Generated from /Users/lasse/IdeaProjects/guiapi/src/main/antlr4/XMLParser.g4 by ANTLR 4.9.1
-package io.github.parzivalExe.guiApi.antlr.grammar;
+package io.github.parzivalExe.guiApi.antlr.source;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

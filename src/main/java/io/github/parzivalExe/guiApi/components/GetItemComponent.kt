@@ -32,7 +32,7 @@ class GetItemComponent(meta: ComponentMeta, @XMLAttribute(defaultValue = "[0=WHI
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if(whoClicked is Player) {
             for(item in items) {
-                items.forEach { item -> item.givePlayerItem(whoClicked, overrideInInv) }
+                items.forEach { it.givePlayerItem(whoClicked, overrideInInv) }
             }
             whoClicked.updateInventory()
             Bukkit.getPluginManager().callEvent(GetItemComponentClickedEvent(this, whoClicked, gui, action, place, clickType, items.toTypedArray()))

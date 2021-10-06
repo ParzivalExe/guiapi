@@ -66,7 +66,7 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent val addit
                 gui.addComponent(component)
             }
         }else{
-            additionalComponents.forEachIndexed { index, component ->
+            additionalComponents.forEachIndexed { _, component ->
                 if(component is AdditionalOptionsComponent && component.isOpened)
                     component.openUnderInventory(whoClicked, gui, action, clickType)
 
