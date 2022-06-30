@@ -17,7 +17,7 @@ And that's it. If you should still have problems because some part of the plugin
 
 ## Implementation
 
-There are different ways to implement this API into your Code so that you can use it's functionality properly
+There is unfortunatelly only one way to use the GuiAPI right now as implementation through Maven is not working currently. So the only way to implement this Plugin is simply through adding the .jar-File as a Library for your Project.
 
 
 ### Through .jar-File
@@ -27,33 +27,6 @@ For this, you can download the GuiAPI at [CurseForge.com](https://www.curseforge
 Just make sure, that you download the Version approved for the Minecraft-Version you are developing for.
 
 Now, you only need to add a dependency to this *.jar*-file and everything should work without Problems. Just don't forget that you also need the GuiAPI in your *plugins*-folder just like already described in the implementation for another plugin
-
-
-### Through Maven
-
-Much more consistent is however the implementation over maven *(pom.xml)* so, if your project is maven-based, then I would suggest using this method instead. 
-
-It is however much more complicated as well right now until I have gotten around to creating a much more straight-forward version of this.
-
-To implement this you first need to create a connection to the GitHub-Repository as described in [this](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) tutorial by GitHub. 
-
-If this actually worked for you you simply need to implement the dependency by writing the following dependency into your *pom.xml*:
-```
-<project>
-    ...
-    <dependencies>
-        ...
-        <dependency>
-            <groupId>io.github.parzivalexe</groupId>
-            <artifactId>guiapi-mc[MINECRAFT_VERSION]</artifactId>
-            <version>[GUIAPI_VERSION]-Snapshot</version>
-        </dependency>
-        ...
-    </dependencies>
-    ...
-</project>
-```
-As you can see, there are still `MINECRAFT_VERSION` and `GUIAPI_VERSION` to fill out. If you want to know which packages actually exist *(some GuiAPI-Versions or Minecraft-Versions simply don't exist or don't exist together)*, you can see all the published packages [here](https://github.com/ParzivalExe?tab=packages&repo_name=guiapi). If you click on the package you want you also see the exact `dependency`-Element you need to use in order to implement this exact version of GuiAPI.
 
 
 ## [How to start](https://github.com/ParzivalExe/guiapi/wiki)
