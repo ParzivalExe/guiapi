@@ -26,6 +26,7 @@ class GetItemComponent(meta: ComponentMeta, @XMLAttribute(defaultValue = "0=35",
     constructor(meta: ComponentMeta, item: InvItemStack) : this(meta, arrayListOf(item))
     constructor(meta: ComponentMeta) : this(meta, arrayListOf())
     @Suppress("unused")
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new GetItemComponent(ComponentMeta)"))
     constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {

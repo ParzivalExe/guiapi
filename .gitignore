@@ -2,3 +2,5 @@ target
 .idea
 src/main/kotlin/io/github/parzivalExe/guiApi/components/ExecuteCommandComponent.java
 src/main/kotlin/io/github/parzivalExe/guiApi/objects/Command.java
+guiapi.userlibraries
+guiapi-mc1.8.eml

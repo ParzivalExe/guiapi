@@ -28,6 +28,7 @@ class EventComponent(componentMeta: ComponentMeta) : Component(componentMeta) {
     var closeGui = true
 
     @Suppress("unused")
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new EventComponent(ComponentMeta)"))
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
