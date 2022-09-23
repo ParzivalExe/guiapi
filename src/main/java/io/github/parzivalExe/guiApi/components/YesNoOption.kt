@@ -4,7 +4,6 @@ import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
-import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.events.NoOptionClickedEvent
 import io.github.parzivalExe.guiApi.events.YesOptionClickedEvent
 import org.bukkit.Bukkit
@@ -22,20 +21,21 @@ class YesNoOption(meta: ComponentMeta) : AdditionalOptionsComponent(meta), Compo
         @JvmStatic val YES_NO_OPTION_KEY = "yesNoOption"
     }
 
-    constructor(): this(ComponentMeta("", ItemStack(Material.WOOL)))
 
-    @Suppress("DEPRECATION")
+    @Suppress("unused")
+    constructor(): this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
+
     @XMLConstructor([XMLAttribute(attrName = "yesTitle", defaultValue = "YES"), XMLAttribute(attrName = "yesLook", defaultValue = "35:5", converter = ItemStackConverter::class)])
-    var yesMeta = ComponentMeta("YES", ItemStack(35, 1, 5))
+    var yesMeta = ComponentMeta("YES", ItemStack(Material.GREEN_WOOL))
 
     var yesOption: StaticComponent? = null
-        private set;
+        private set
 
     @XMLConstructor([XMLAttribute(attrName = "noTitle", defaultValue = "no"), XMLAttribute(attrName = "noLook", defaultValue = "166", converter = ItemStackConverter::class)])
     var noMeta = ComponentMeta("no", ItemStack(Material.BARRIER))
 
     var noOption: StaticComponent? = null
-        private set;
+        private set
 
     override fun componentClicked(whoClicked: HumanEntity, gui: Gui, action: InventoryAction, slot: Int, clickType: ClickType) {
         if(isOpened) {

@@ -22,19 +22,4 @@ public class MessageComponentClickedEvent extends ComponentClickedEvent {
     public String getMessage() {
         return message;
     }
-
-//<--------------------------------------------------------------------/*NEEDED PATH*/------------------------------------------------------------->//
-
-    public static HandlerList handlerList = new HandlerList();
-
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
 }

@@ -26,26 +26,11 @@ class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
     }
 
 
-    constructor(material: Material, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
-            : this(ItemStack(material, amount, 0, data).apply {
-                    if(material.maxDurability > 0) durability = itemDurability
-              }, invPosition)
-
-    constructor(type: Int, amount: Int, itemDurability: Short, data: Byte, invPosition: Int)
-            : this(Material.getMaterial(type), amount, itemDurability, data, invPosition)
-
-    constructor(type: Int, invPosition: Int)
-            : this(type, 1, invPosition)
-
-    constructor(type: Int, amount: Int, invPosition: Int)
-            : this(ItemStack(type, amount, 0, 0), invPosition)
+    constructor(type: Material, amount: Int, invPosition: Int)
+            : this(ItemStack(type, amount), invPosition)
 
     constructor(type: Material, invPosition: Int)
             : this(type, 1, invPosition)
-
-    constructor(type: Material, amount: Int, invPosition: Int)
-            : this(ItemStack(type, amount, 0, 0), invPosition)
-
 
     fun givePlayerItem(player: Player, overrideInInv: Boolean) {
         val leftItems = arrayListOf<ItemStack>()
@@ -79,5 +64,6 @@ class InvItemStack(var itemStack: ItemStack, var invPosition: Int) {
         }
         leftItems.forEach { leftItem -> player.world.dropItem(player.location, leftItem) }
     }
+
 
 }

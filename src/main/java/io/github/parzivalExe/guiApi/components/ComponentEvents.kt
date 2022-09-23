@@ -14,11 +14,12 @@ class ComponentEvents : Listener{
     fun onClick(event: InventoryClickEvent) {
         if(clickIsRight(event) && event.whoClicked is Player && GuiManager.isInventoryGui(event.inventory)) {
             val gui = GuiManager.getGuiFromInventory(event.inventory)!!
-            if(ComponentManager.isItemComponent(event.currentItem, event.slot, gui)) {
-                val component = ComponentManager.getComponentFromItem(event.currentItem, event.slot, gui)!!
+            if(ComponentManager.isItemComponent(event.currentItem!!, event.slot, gui)) {
+                val component = ComponentManager.getComponentFromItem(event.currentItem!!, event.slot, gui)!!
 
                 component.componentClicked(event.whoClicked, gui, event.action, event.slot, event.click)
                 component.startClickAction(event.whoClicked as Player, gui, event.action, event.click)
+
                 Bukkit.getPluginManager().callEvent(ComponentClickedEvent(component, event.whoClicked as Player, gui, event.action, event.slot, event.click))
 
                 event.isCancelled = true

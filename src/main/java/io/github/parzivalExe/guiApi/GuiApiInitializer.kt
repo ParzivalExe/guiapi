@@ -34,14 +34,15 @@ class GuiApiInitializer : JavaPlugin() {
         println("$PREFIX The GuiAPI has been disabled!")
     }
 
-
     private fun createGuiDebugFolder() {
         val path = Path("plugins/GuiAPI/Guis")
         if(path.notExists()) {
             path.createDirectories()
-            println("$PREFIX Directory \'plugins/GuiAPI/Guis\' for XML-Debugging created")
+            println("$PREFIX   Directory \'plugins/GuiAPI/Guis\' for XML-Debugging created")
         }
     }
+
+
     private fun registerEvents() {
         println("$PREFIX   All Events are being registered...")
 
@@ -55,14 +56,13 @@ class GuiApiInitializer : JavaPlugin() {
         println("$PREFIX   All Commands are being registered...")
 
         val amountCommand = GetAmountCommand()
-        getCommand("guiAmount").executor = amountCommand
-        getCommand("componentAmount").executor = amountCommand
-        getCommand("componentList").executor = amountCommand
+        getCommand("guiAmount")?.setExecutor(amountCommand)
+        getCommand("componentAmount")?.setExecutor(amountCommand)
+        getCommand("componentList")?.setExecutor(amountCommand)
         @Suppress("SpellCheckingInspection")
-        getCommand("guixml").executor = GuiXMLCommand()
+        getCommand("guixml")?.setExecutor(GuiXMLCommand())
 
         println("$PREFIX   Commands have been registered!")
     }
-
 
 }

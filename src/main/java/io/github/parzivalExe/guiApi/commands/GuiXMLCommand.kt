@@ -3,27 +3,23 @@ package io.github.parzivalExe.guiApi.commands
 import io.github.parzivalExe.guiApi.Gui
 import io.github.parzivalExe.guiApi.GuiApiInitializer
 import io.github.parzivalExe.guiApi.PathOrigin
-import io.github.parzivalExe.guiApi.components.Component
-import io.github.parzivalExe.guiApi.components.ComponentClickAction
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.ClickType
-import org.bukkit.event.inventory.InventoryAction
 
 class GuiXMLCommand : CommandExecutor {
 
 
-    override fun onCommand(sender: CommandSender?, command: Command?, label: String?, args: Array<out String>?): Boolean {
-        if(sender is Player && args!!.size == 1) {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if(sender is Player && args.size == 1) {
             @Suppress("SpellCheckingInspection")
             val gui = Gui.createGui("plugins/GuiAPI/Guis/${args[0]}", PathOrigin.SERVER_ORIGIN)
             gui.openGui(sender)
             return true
         }
         @Suppress("SpellCheckingInspection")
-        sender?.sendMessage("${GuiApiInitializer.PREFIX} The Command needs the name of the file: /guixml [fileName]")
+        sender.sendMessage("${GuiApiInitializer.PREFIX} The Command needs the name of the file: /guixml [fileName]")
         return true
     }
 

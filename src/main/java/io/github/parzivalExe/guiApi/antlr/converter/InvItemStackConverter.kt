@@ -12,11 +12,12 @@ class InvItemStackConverter : Converter {
 
         var string = attrString
         var position = InvItemStack.NO_POSITION
+
         if(string.contains(Regex("="))) {
             position = changeStringToPosition(string.split("=")[0])
             string = string.split("=")[1]
         }
-        val item = ItemStackConverter().attributeStringToValue(string, ItemStack(Material.STONE)) as ItemStack
+        val item = ItemStackConverter().attributeStringToValue(string, ItemStack(Material.WHITE_WOOL)) as ItemStack
 
         @Suppress("DEPRECATION")
         return InvItemStack(item, position)

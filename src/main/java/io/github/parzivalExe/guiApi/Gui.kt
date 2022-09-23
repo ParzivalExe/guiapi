@@ -20,7 +20,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 class Gui(@XMLAttribute(necessary = true) val title: String) {
@@ -32,13 +31,16 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
         private const val FILL_ITEM = "fillItem"
         const val SAVE_KEY_OPEN_CLASS = "openClass"
 
-
+        @JvmStatic
         fun createGui(externalGui: ExternalGui) = externalGui.getGui()
+        @JvmStatic
         fun createGui(path: String, pathOrigin: PathOrigin): Gui = createGui(path, "mgui", pathOrigin)
+        @JvmStatic
         fun createGui(path: String, fileType: String, pathOrigin: PathOrigin): Gui {
             val clazz = Class.forName(Thread.currentThread().stackTrace[3].className)
             return createGui(path, fileType, pathOrigin, clazz)
         }
+        @JvmStatic
         internal fun createGui(path: String, fileType: String, pathOrigin: PathOrigin, creationClass: Class<*>): Gui {
             val charStream = when(pathOrigin) {
                 PathOrigin.PC_ORIGIN -> CharStreams.fromFileName("/$path.$fileType")
@@ -59,7 +61,6 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
             val documentContext = parser.document()
 
             val visitor = Visitor(documentContext)
-
             return visitor.buildGui()
         }
 
@@ -76,19 +77,20 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
     constructor() : this("NoTitleSet")
 
     var id: Int = GuiManager.initializeGui(this)
-        private set;
+        private set
+
     @XMLAttribute
     var forcedSize = NO_FORCE_SIZE
     @XMLAttribute
     var fillEmptyPlaces = true
     @Suppress("DEPRECATION")
     @XMLAttribute(converter = ItemStackConverter::class)
-    var fillItem = ItemStack(Material.STAINED_GLASS_PANE, 1, 7)
+    var fillItem = ItemStack(Material.GRAY_STAINED_GLASS_PANE)
 
     var inventory: Inventory? = null
-        private set;
+        private set
     var openedPlayer: Player? = null
-        private set;
+        private set
 
     private val savedObjects = hashMapOf<String, Any?>()
 
@@ -138,6 +140,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
 
     @Suppress("unused")
     fun getAllComponents(): Array<Component> = registeredComponents.keys.toTypedArray()
+
 
     //endregion
 
@@ -277,6 +280,8 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
 
     //endregion
 
+
+
     //region Create/Refresh Gui
 
     @Suppress("unused")
@@ -299,6 +304,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
         refreshInventory()
         Bukkit.getPluginManager().callEvent(GuiOpenEvent(this, player))
     }
+
 
     fun refreshInventory() {
         if(openedPlayer == null)
@@ -328,7 +334,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
         }
 
         if(newInventory)
-            openedPlayer?.openInventory(inventory)
+            openedPlayer?.openInventory(inventory!!)
         else
             openedPlayer?.updateInventory()
         Bukkit.getPluginManager().callEvent(GuiRefreshEvent(this, openedPlayer))
@@ -425,6 +431,7 @@ class Gui(@XMLAttribute(necessary = true) val title: String) {
         savedObjects.containsKey(key)
 
     //endregion
+
 
 
     override fun equals(other: Any?): Boolean {

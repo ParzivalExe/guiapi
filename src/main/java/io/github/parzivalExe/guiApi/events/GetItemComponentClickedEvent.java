@@ -8,8 +8,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 
-import java.util.ArrayList;
-
 public class GetItemComponentClickedEvent extends ComponentClickedEvent {
     private final InvItemStack[] givenItems;
 

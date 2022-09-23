@@ -5,7 +5,6 @@ import io.github.parzivalExe.guiApi.components.Component;
 import io.github.parzivalExe.guiApi.components.EventComponent;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 
@@ -17,19 +16,5 @@ public class EventComponentClickedEvent extends ComponentClickedEvent {
         super(clickedComponent, whoClicked, gui, action, slot, clickType);
     }
 
-
-    //<-------------------------------------------------------------------------/*NEEDED PATH*/------------------------------------------------------------------------>//
-
-    public static HandlerList handlerList = new HandlerList();
-
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
 
 }

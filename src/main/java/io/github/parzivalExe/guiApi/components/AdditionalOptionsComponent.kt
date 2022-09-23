@@ -29,8 +29,8 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent val addit
 
     protected var isOpened = false
 
-
-    internal constructor() : this(ComponentMeta("", ItemStack(Material.WOOL)))
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new AdditionalOptionsComponent(ComponentMeta)"))
+    internal constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
     constructor(meta: ComponentMeta) : this(meta, arrayListOf())
 
 
@@ -76,8 +76,10 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent val addit
             }
             gui.positionOffsetFromPosition(startPosition, -getOffset())
         }
+
         isOpened = !isOpened
-        Bukkit.getPluginManager().callEvent(ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
+        Bukkit.getPluginManager().callEvent(
+            ExpandAdditionalOptionsEvent(this, whoClicked, gui, action, place, clickType, isOpened, openOption))
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -103,6 +105,5 @@ open class AdditionalOptionsComponent(meta: ComponentMeta, @XMLContent val addit
             return ceil((maxPlace+1)/9.0).toInt()*9
         return offset
     }
-
 
 }

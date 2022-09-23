@@ -9,10 +9,9 @@ class ItemStackConverter : Converter {
             return defaultValue
 
         var string = attrString
-        //[1x]type[:data][\[damage\]]
+        //[1x]type[\[damage\]]
         var amount = 1
         var damage: Short = 0
-        var data: Byte = 0
         if(string.contains(Regex("\\d+x"))) {
             amount = string.split("x")[0].toInt()
             string = string.split("x")[1]
@@ -21,19 +20,10 @@ class ItemStackConverter : Converter {
             damage = string.split("[")[1].removeSuffix("]").toShort()
             string = string.split("[")[0]
         }
-        if(string.contains(Regex(":\\d+"))) {
-            data = string.split(":")[1].toByte()
-            string = string.split(":")[0]
-        }
+
         @Suppress("DEPRECATION")
-        val material =
-            if(string.matches(Regex("\\d*")))
-                Material.getMaterial(string.toInt())
-            else
-                Material.getMaterial(string)
-        @Suppress("DEPRECATION")
-        return ItemStack(material, amount, 0, data).apply {
-            if(material.maxDurability > 0) durability = damage
+        return ItemStack(Material.getMaterial(string)!!, amount).apply {
+            durability = damage
         }
     }
 }

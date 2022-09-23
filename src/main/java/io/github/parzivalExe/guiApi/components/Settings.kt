@@ -1,6 +1,9 @@
 package io.github.parzivalExe.guiApi.components
 
 import io.github.parzivalExe.guiApi.Gui
+import io.github.parzivalExe.guiApi.antlr.converter.ItemStackConverter
+import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
+import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLContent
 import io.github.parzivalExe.guiApi.events.SettingsClickedEvent
 import org.bukkit.Bukkit
@@ -13,11 +16,11 @@ import org.bukkit.inventory.ItemStack
 
 open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Component(options[0].meta) {
 
-    @Suppress("unused", "DEPRECATION")
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new Settings(ArrayList<SettingOption>)"))
     internal constructor() : this(arrayListOf(
         SettingOption(ComponentMeta("beginner", ItemStack(Material.APPLE))),
         SettingOption(ComponentMeta("Advanced", ItemStack(Material.GOLDEN_APPLE))),
-        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.GOLDEN_APPLE, 1, 1))))
+        SettingOption(ComponentMeta("PROFESSIONAL", ItemStack(Material.ENCHANTED_GOLDEN_APPLE))))
     )
 
     private var activatedOption = 0
@@ -49,6 +52,7 @@ open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Compone
             else
                 activatedOption++
 
+            //meta = options[activatedOption].meta
             gui.refreshInventory()
 
             Bukkit.getPluginManager().callEvent(SettingsClickedEvent(this, options[clickedOption], options[activatedOption], whoClicked, gui, action, slot, clickType))

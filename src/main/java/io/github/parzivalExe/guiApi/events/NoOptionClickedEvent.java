@@ -4,7 +4,6 @@ import io.github.parzivalExe.guiApi.Gui;
 import io.github.parzivalExe.guiApi.components.StaticComponent;
 import io.github.parzivalExe.guiApi.components.YesNoOption;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 
@@ -22,20 +21,5 @@ public class NoOptionClickedEvent extends ComponentClickedEvent {
     public StaticComponent getNoOptionComponent() {
         return this.noOptionComponent;
     }
-
-
-    //<------------------------------------------------------------------/*NEEDED PATH*/------------------------------------------------------------>//
-
-    public static HandlerList handlerList = new HandlerList();
-
-    @Override
-    public HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
 
 }

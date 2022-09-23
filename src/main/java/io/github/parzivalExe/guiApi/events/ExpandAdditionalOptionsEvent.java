@@ -4,7 +4,6 @@ import io.github.parzivalExe.guiApi.Gui;
 import io.github.parzivalExe.guiApi.components.AdditionalOptionsComponent;
 import io.github.parzivalExe.guiApi.components.OpenOption;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;

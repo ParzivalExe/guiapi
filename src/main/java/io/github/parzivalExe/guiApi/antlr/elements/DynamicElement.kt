@@ -71,12 +71,17 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             println("${GuiApiInitializer.C_PREFIX} {WARNING} There has been an unknown Exception with creating the component \'$className\' from XML. The exception thrown is: ${e.message}. BECAUSE OF THIS, THIS TAG WILL BE IGNORED!")
         }
         if(instance != null) {
-            if (Component::class.java.isAssignableFrom(instance::class.java)) {
+            try {
+                if (Component::class.java.isAssignableFrom(instance::class.java)) {
                     (instance as Component).finalizeComponent()
-            }else if(Gui::class.java.isAssignableFrom(instance::class.java)) {
+                }else if(Gui::class.java.isAssignableFrom(instance::class.java)) {
                     (instance as Gui).finalizeGui()
+                }
+            }catch(e: Exception) {
+
             }
         }
+
         return null
     }
 
@@ -104,7 +109,6 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             var xmlName = annotation.attrName
             if (xmlName.isEmpty())
                 xmlName = field.name
-
 
             val value = readAttribute(xmlName, annotation.defaultValue, annotation.converter, annotation.necessary, getEndType(field, annotation.forceEndType)) ?: return
 
@@ -144,10 +148,10 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         }else{
             //field is value
             val content = findElementOfType(field.type, library).firstOrNull() ?:
-                if(annotation.necessary)
-                    throw XMLAttributeException("The Element of type ${field.type.canonicalName} must be given as Content for this Component")
-                else
-                    return
+            if(annotation.necessary)
+                throw XMLAttributeException("The Element of type ${field.type.canonicalName} must be given as Content for this Component")
+            else
+                return
             writeValueIntoField(field, instance, (content as DynamicElement).createObject(library))
         }
     }
@@ -187,7 +191,9 @@ open class DynamicElement(tagName: String) : Element(tagName) {
         val isArray = valueStringIsArray(attrValueString)
         for(valueString in valueStringToList(attrValueString)) {
             @Suppress("DEPRECATION")
-            val value = converter.java.newInstance().attributeStringToValue(valueString.replace("\\,", ","), null) ?: continue
+            val value =
+                converter.java.newInstance().attributeStringToValue(valueString.replace("\\,", ","), null) ?: continue
+
 
             if (value !is String) {
                 valueList.add(value)
@@ -222,6 +228,7 @@ open class DynamicElement(tagName: String) : Element(tagName) {
             return (field.genericType as ParameterizedType).actualTypeArguments[0] as Class<*>
         return field.type
     }
+
 
     private fun valueStringToList(valueString: String): Array<String> =
         if(valueString.startsWith("[") && valueString.endsWith("]"))

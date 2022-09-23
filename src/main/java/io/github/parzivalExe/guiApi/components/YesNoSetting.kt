@@ -6,8 +6,8 @@ import io.github.parzivalExe.guiApi.antlr.interfaces.XMLAttribute
 import io.github.parzivalExe.guiApi.antlr.interfaces.XMLConstructor
 import io.github.parzivalExe.guiApi.events.YesNoSettingChosenEvent
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.inventory.ItemStack
@@ -19,20 +19,21 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
         @JvmStatic val KEY_SETTING_TYPE = "settingType"
     }
 
+
     @XMLConstructor([
         XMLAttribute(attrName = "yesTitle", defaultValue = "YES"),
-        XMLAttribute(attrName = "yesLook", defaultValue = "351:10", converter = ItemStackConverter::class),
+        XMLAttribute(attrName = "yesLook", defaultValue = "LIME_DYE", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
-    var yesSettingMeta = ComponentMeta("YES", ItemStack(351, 1, 10))
+    var yesSettingMeta = ComponentMeta("YES", ItemStack(Material.GREEN_DYE))
         private set
 
     @XMLConstructor([
         XMLAttribute(attrName = "noTitle", defaultValue = "no"),
-        XMLAttribute(attrName = "noLook", defaultValue = "351:8", converter = ItemStackConverter::class),
+        XMLAttribute(attrName = "noLook", defaultValue = "GRAY_DYE", converter = ItemStackConverter::class),
         XMLAttribute(attrName = "description")
     ])
-    var noSettingMeta = ComponentMeta("no", ItemStack(351, 1, 8))
+    var noSettingMeta = ComponentMeta("no", ItemStack(Material.RED_DYE))
         private set
 
     var description: ArrayList<String>
@@ -42,7 +43,13 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
             noSettingMeta.description = value
         }
 
-    constructor(): this(ComponentMeta("YES", ItemStack(351, 1, 10)), ComponentMeta("no", ItemStack(351, 1, 8)))
+
+    init {
+        yesSettingMeta = yesMeta
+        noSettingMeta = noMeta
+    }
+
+    constructor(): this(ComponentMeta("YES", ItemStack(Material.GREEN_DYE)), ComponentMeta("no", ItemStack(Material.RED_DYE)))
 
     init {
         yesSettingMeta = yesMeta
@@ -58,6 +65,7 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
         options.add(SettingOption(noSettingMeta.apply {
             savedObjects[KEY_SETTING_TYPE] = "NO"
         }))
+
         return super.getGuiItem()
     }
 
@@ -65,6 +73,7 @@ class YesNoSetting(yesMeta: ComponentMeta, noMeta: ComponentMeta) : Settings() {
         super.componentClicked(whoClicked, gui, action, slot, clickType)
         Bukkit.getPluginManager().callEvent(YesNoSettingChosenEvent(this, getActivatedOption().meta.savedObjects[KEY_SETTING_TYPE] == "YES", whoClicked, gui, action, slot, clickType))
     }
+
 
 
 }
