@@ -1,3 +1,5 @@
+![Maven Central](https://img.shields.io/maven-central/v/io.github.parzivalexe/guiapi-mc1.8?label=MAVEN-CENTRAL%20%5BMC%20v1.8%5D&style=for-the-badge)
+
 With GuiAPI you can create Guis for your Bukkit/Spigot-Plugin in seconds while at the same time saving many lines of code
 
 **Important**: GuiAPI is right now only interesting for Developers to use as an API. As a Server-Admin this Plugin is useless as it doesn't work without use in code. It could of course be used by other plugins you are using in which case it is necessary to run these Plugins.
