@@ -29,31 +29,27 @@ Just make sure, that you download the Version approved for the Minecraft-Version
 Now, you only need to add a dependency to this *.jar*-file and everything should work without Problems. Just don't forget that you also need the GuiAPI in your *plugins*-folder just like already described in the implementation for another plugin
 
 
-### Through Maven
+### Through [Maven](https://central.sonatype.dev/artifact/io.github.parzivalexe/guiapi-mc1.17/2.0.0)
 
-Much more consistent is however the implementation over maven *(pom.xml)* so, if your project is maven-based, then I would suggest using this method instead. 
+The other way to implement GuiAPI into your own Plugin is through a Build Automation System like Maven. To implement GuiAPI specifically for Minecraft 1.8 you must write: 
 
-It is however much more complicated as well right now until I have gotten around to creating a much more straight-forward version of this.
-
-To implement this you first need to create a connection to the GitHub-Repository as described in [this](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) tutorial by GitHub. 
-
-If this actually worked for you you simply need to implement the dependency by writing the following dependency into your *pom.xml*:
 ```
-<project>
-    ...
-    <dependencies>
-        ...
-        <dependency>
-            <groupId>io.github.parzivalexe</groupId>
-            <artifactId>guiapi-mc[MINECRAFT_VERSION]</artifactId>
-            <version>[GUIAPI_VERSION]-Snapshot</version>
-        </dependency>
-        ...
-    </dependencies>
-    ...
-</project>
+<dependency>
+    <groupId>io.github.parzivalexe</groupId>
+    <artifactId>guiapi-mc1.8</artifactId>
+    <version>[VERSION]</version>
+</dependency>
 ```
-As you can see, there are still `MINECRAFT_VERSION` and `GUIAPI_VERSION` to fill out. If you want to know which packages actually exist *(some GuiAPI-Versions or Minecraft-Versions simply don't exist or don't exist together)*, you can see all the published packages [here](https://github.com/ParzivalExe?tab=packages&repo_name=guiapi). If you click on the package you want you also see the exact `dependency`-Element you need to use in order to implement this exact version of GuiAPI.
+
+The `[Version]` must of course be replaced by the GuiAPI-Version you want to implement. The newest Version for Minecraft 1.8 is shown at the very top of this Readme-File.  
+
+Because `io.github.parzivalexe` is hosted on Maven-Central, you shouldn't need to specify any extra `repository` in your `pom.xml`.  
+
+As you can see important is to write `guiapi-mc1.8` as the `artifactId` since we specifically want to use the GuiAPI with MC 1.8. This is possible because the GuiAPI for MC 1.8 was seemingly important enough, that it was preserved as it's own version that could even in future get new versions while the main `guiapi` `artifact` will abandone older MC-Versions when a new MC-Version comes out.
+
+## [How to start](https://github.com/ParzivalExe/guiapi/wiki)
+
+If you don't know how to start using the GuiAPI, it is actually pretty easy as pretty much every single extensive [Wiki](https://github.com/ParzivalExe/guiapi/wiki). Simply start with [First Gui](https://github.com/ParzivalExe/guiapi/wiki/First-Gui) and then work yourself through all the chapters you are interested in.
 
 
 ## [How to start](https://github.com/ParzivalExe/guiapi/wiki)
