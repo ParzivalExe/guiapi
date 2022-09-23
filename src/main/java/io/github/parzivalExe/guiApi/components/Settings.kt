@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 
 open class Settings(@XMLContent var options: ArrayList<SettingOption>) : Component(options[0].meta) {
 
-    @Suppress("unused", "DEPRECATION")
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new Settings(ArrayList<SettingOption>)"))
     internal constructor() : this(arrayListOf(
         SettingOption(ComponentMeta("beginner", ItemStack(Material.APPLE))),
         SettingOption(ComponentMeta("Advanced", ItemStack(Material.GOLDEN_APPLE))),

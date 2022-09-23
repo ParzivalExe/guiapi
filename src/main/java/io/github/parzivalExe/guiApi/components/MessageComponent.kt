@@ -17,7 +17,7 @@ class MessageComponent(meta: ComponentMeta, @XMLAttribute var message: String = 
     @XMLAttribute
     var colorCodeChar = '&'
 
-    @Suppress("unused")
+    @Deprecated("DON'T USE: This Constructor is only used for XML and shouldn't be used in Code itself", ReplaceWith("new MessageComponent(ComponentMeta)"))
     internal constructor() : this(ComponentMeta("", ItemStack(Material.WHITE_WOOL)))
     constructor(meta: ComponentMeta) : this(meta, "")
 
