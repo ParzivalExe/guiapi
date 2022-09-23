@@ -41,6 +41,9 @@ The other way to implement GuiAPI into your own Plugin is through a Build Automa
 ```
 
 The `[Version]` must of course be replaced by the GuiAPI-Version you want to implement. The newest Version for Minecraft 1.17 is shown at the very top of this Readme-File.  
+
+Because `io.github.parzivalexe` is hosted on Maven-Central, you shouldn't need to specify any extra `repository` in your `pom.xml`.  
+
 As you can see important is to write `guiapi-mc1.17` as the `artifactId` since we specifically want to use the GuiAPI with MC 1.17. This is possible because the GuiAPI for MC 1.17 was seemingly important enough, that it was preserved as it's own version that could even in future get new versions while the main `guiapi` `artifact` will abandone older MC-Versions when a new MC-Version comes out.
 
 ## [How to start](https://github.com/ParzivalExe/guiapi/wiki)
