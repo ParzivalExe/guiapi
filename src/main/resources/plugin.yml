@@ -1,6 +1,6 @@
 name: GuiAPI
 version: 2.0.0
-api-version: 1.18
+api-version: 1.19
 authors: [Parzival]
 website: https://github.com/ParzivalExe/guiapi
 main: io.github.parzivalExe.guiApi.GuiApiInitializer

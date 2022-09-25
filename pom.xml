@@ -6,7 +6,7 @@
 
     <groupId>io.github.parzivalexe</groupId>
     <artifactId>guiapi</artifactId>
-    <version>2.0.0-mc1.18</version>
+    <version>2.0.0-mc1.19</version>
 
     <properties>
         <kotlin.version>1.7.10</kotlin.version>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
