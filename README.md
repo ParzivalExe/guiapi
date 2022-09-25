@@ -1,4 +1,4 @@
-![Maven Central](https://img.shields.io/maven-central/v/io.github.parzivalexe/guiapi-mc1.17?label=MAVEN-CENTRAL%20%5BMC%20V1.17%5D&style=for-the-badge)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.parzivalexe/guiapi?style=for-the-badge)
 
 With GuiAPI you can create Guis for your Bukkit/Spigot-Plugin in seconds while at the same time saving many lines of code
 
@@ -30,21 +30,21 @@ Now, you only need to add a dependency to this *.jar*-file and everything should
 
 ### Through [Maven](https://central.sonatype.dev/artifact/io.github.parzivalexe/guiapi-mc1.17/2.0.0)
 
-The other way to implement GuiAPI into your own Plugin is through a Build Automation System like Maven. To implement GuiAPI specifically for Minecraft 1.17 you must write: 
+The other way to implement GuiAPI into your own Plugin is through a Build Automation System like Maven. To implement GuiAPI from the main-branch (main versions), you need to write: 
 
 ```
 <dependency>
     <groupId>io.github.parzivalexe</groupId>
-    <artifactId>guiapi-mc1.17</artifactId>
+    <artifactId>guiapi</artifactId>
     <version>[VERSION]</version>
 </dependency>
 ```
 
-The `[Version]` must of course be replaced by the GuiAPI-Version you want to implement. The newest Version for Minecraft 1.17 is shown at the very top of this Readme-File.  
+The `[Version]` must of course be replaced by the GuiAPI-Version you want to implement. The newest Version for the Main-Branch/Artifact is shown at the very top of this Readme-File.  
 
 Because `io.github.parzivalexe` is hosted on Maven-Central, you shouldn't need to specify any extra `repository` in your `pom.xml`.  
 
-As you can see important is to write `guiapi-mc1.17` as the `artifactId` since we specifically want to use the GuiAPI with MC 1.17. This is possible because the GuiAPI for MC 1.17 was seemingly important enough, that it was preserved as it's own version that could even in future get new versions while the main `guiapi` `artifact` will abandone older MC-Versions when a new MC-Version comes out.
+As you can see it is important to write `guiapi` as the `artifactId` since we specifically want to use the GuiAPI Main-Branch/Versions. There are also other Artifacts like `guiapi-mc1.8` which only represent a single Minecraft-Version (mostly one that was important enough to be kept as a Legacy-Version and can still get updates even when the API has moved to a newer version). If you simply want to develop for the new Minecraft-Versions `guiapi` is the right Artifact to use ;)
 
 ## [How to start](https://github.com/ParzivalExe/guiapi/wiki)
 
